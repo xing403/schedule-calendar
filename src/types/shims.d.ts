@@ -3,3 +3,16 @@ declare module '*.vue' {
   const component: DefineComponent<{}, {}, any>
   export default component
 }
+interface ScheduleCalendar {
+  scheduleId: number | undefined;
+  scheduleTitle: string;
+  scheduleModel: string;
+  scheduleRangeStart: Date;
+  scheduleRangeEnd: Date;
+  scheduleDate: Date;
+  createTime: Date;
+  createBy: string;
+  updateTime: Date;
+  updateBy: string;
+  delFlag: string;
+}

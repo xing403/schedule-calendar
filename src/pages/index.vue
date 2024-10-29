@@ -1,28 +1,16 @@
 <script setup lang="ts" generic="T extends any, O extends any">
+import scheduleCalendarApi from '~/api/modules/schedule-calendar'
 
-import { random as randomColor } from '@ctrl/tinycolor';
-const list = ref([{
-  title: 'test1',
-  range: '2024-10-10~2024-11-01',
-  color: randomColor({
-    luminosity: 'light',
-    hue: 'blue',
-  }).toHexString()
-}, {
-  title: 'test2',
-  range: '2024-10-10~2024-11-01',
-  color: randomColor({
-    luminosity: 'light',
-    hue: 'blue',
-  }).toHexString()
-}, {
-  title: 'test3',
-  range: '2024-10-10~2024-11-01',
-  color: randomColor({
-    luminosity: 'light',
-    hue: 'blue',
-  }).toHexString()
-}])
+const list = ref<ScheduleCalendar[]>([])
+const getScheduleCalendarList = () => {
+  scheduleCalendarApi.getScheduleCalendarList().then(res => {
+    list.value = res.data
+  })
+}
+onMounted(() => {
+  getScheduleCalendarList()
+})
+
 </script>
 
 <template>

@@ -2,8 +2,8 @@
 import CalendarItem from './CalendarItem.vue'
 import dayjs from 'dayjs'
 import isBetween from 'dayjs/plugin/isBetween'
-
-const modelValue = defineModel<any[]>()
+import { random as randomColor } from '@ctrl/tinycolor';
+const modelValue = defineModel<ScheduleCalendar[]>()
 
 const props = defineProps<{
   date?: Date
@@ -22,22 +22,25 @@ const list = computed(() => {
     const temp: any = []
     const tempDay = startDay.add(index, 'day')
     const tempDayStr = tempDay.format('YYYY-MM-DD')
-    console.log(tempDayStr)
     modelValue.value?.forEach(item => {
       let inRange = false, isSide = false
-
-      if (/~/.test(item.range)) {
-        const [start, end] = item.range.split('~')
+      if (item.scheduleModel === '0') {
+        const start = dayjs(item.scheduleRangeStart)
+        const end = dayjs(item.scheduleRangeEnd)
 
         inRange = tempDay.isBetween(start, end)
-        isSide = dayjs(start).isSame(tempDayStr) || dayjs(end).isSame(tempDayStr)
+        isSide = start.isSame(tempDayStr) || end.isSame(tempDayStr)
       } else {
-        inRange = item.range.includes(tempDayStr)
+        inRange = dayjs(item.scheduleDate).isSame(tempDayStr)
       }
       if (inRange || isSide) {
         temp.push({
-          title: item.title,
-          color: item.color,
+          title: item.scheduleTitle,
+          color: randomColor({
+            seed: item.scheduleId,
+            luminosity: 'light',
+            hue: 'blue',
+          }).toHexString(),
         })
       }
     })
