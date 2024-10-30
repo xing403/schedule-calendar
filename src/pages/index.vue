@@ -14,5 +14,5 @@ onMounted(() => {
 </script>
 
 <template>
-  <month-calendar v-model="list" />
+  <month-calendar :date="new Date()" v-model="list" />
 </template>

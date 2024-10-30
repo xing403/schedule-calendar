@@ -10,6 +10,7 @@ interface ScheduleCalendar {
   scheduleRangeStart: Date;
   scheduleRangeEnd: Date;
   scheduleDate: Date;
+  scheduleCron: string;
   createTime: Date;
   createBy: string;
   updateTime: Date;
