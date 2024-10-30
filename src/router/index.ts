@@ -1,6 +1,7 @@
 import layout from '~/layouts/index.vue'
 import { createRouter, createWebHashHistory } from 'vue-router'
 import pkj from '../../package.json'
+import useUserStore from '~/store/modules/user'
 
 const routes = [
   {
@@ -22,8 +23,12 @@ const router = createRouter({
   routes,
 })
 
-router.beforeEach((to, from, next) => {
+router.beforeEach(async (to, from, next) => {
+  const userStore = useUserStore()
   useTitle(pkj.name ?? '未命名')
+  if (userStore.userIsLogin) {
+    await userStore.getUserInformation()
+  }
   next()
 })
 

@@ -1,4 +1,5 @@
 import { RemovableRef } from '@vueuse/core'
+import { ElMessage } from 'element-plus'
 import { defineStore } from 'pinia'
 import userApi from '~/api/modules/user'
 
@@ -38,6 +39,7 @@ export default defineStore('user', () => {
 
   const handleUserLogout = () => {
     return userApi.logout().then(() => {
+      ElMessage.success('退出成功')
       reLogin()
     }).catch(() => { })
   }
