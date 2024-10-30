@@ -9,8 +9,8 @@ const cronResult: {
 } = {}
 
 const modelValue = defineModel<ScheduleCalendar[]>()
+const date = defineModel<Date>('date')
 
-const date = ref(new Date())
 
 dayjs.extend(isBetween)
 
@@ -61,6 +61,9 @@ const list = computed(() => {
 <template>
   <div class="calendar">
     <el-calendar v-model="date">
+      <template #header>
+        <slot name="header" />
+      </template>
       <template #date-cell="{ data }">
         <calendar-item :day="data.day" :list="list[data.day]" />
       </template>

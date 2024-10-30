@@ -1,20 +1,13 @@
-import layout from '~/layouts/index.vue'
+
 import { createRouter, createWebHashHistory } from 'vue-router'
 import pkj from '../../package.json'
 import useUserStore from '~/store/modules/user'
 
-const routes = [
-  {
-    path: '',
-    component: layout,
-    children: [
-      {
-        path: '',
-        name: 'home',
-        component: () => import('~/pages/index.vue'),
-      },
-    ],
-  },
+const routes = [{
+  path: '',
+  name: 'home',
+  component: () => import('~/pages/index.vue'),
+}
 ]
 
 

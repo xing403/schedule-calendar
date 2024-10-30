@@ -4,16 +4,16 @@ declare module '*.vue' {
   export default component
 }
 interface ScheduleCalendar {
-  scheduleId: number | undefined;
+  scheduleId?: number;
   scheduleTitle: string;
   scheduleModel: string;
-  scheduleRangeStart: Date;
-  scheduleRangeEnd: Date;
-  scheduleDate: Date;
+  scheduleRangeStart?: Date | string;
+  scheduleRangeEnd?: Date | string;
+  scheduleDate?: Date | string;
   scheduleCron: string;
-  createTime: Date;
-  createBy: string;
-  updateTime: Date;
-  updateBy: string;
-  delFlag: string;
+  createTime?: Date;
+  createBy?: string;
+  updateTime?: Date;
+  updateBy?: string;
+  delFlag?: string;
 }
