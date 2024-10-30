@@ -7,6 +7,7 @@ import useVitePlugins from './vite/plugins'
 export default ({ mode, command }: any) => {
   const env = loadEnv(mode, process.cwd())
   return defineConfig({
+    base: './',
     resolve: {
       alias: {
         '~/': `${path.resolve(__dirname, 'src')}/`,

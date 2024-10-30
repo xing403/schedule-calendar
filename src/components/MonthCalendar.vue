@@ -10,7 +10,7 @@ const cronResult: {
 
 const modelValue = defineModel<ScheduleCalendar[]>()
 
-const date = ref(dayjs())
+const date = ref(new Date())
 
 dayjs.extend(isBetween)
 
