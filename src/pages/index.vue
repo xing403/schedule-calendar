@@ -2,10 +2,10 @@
 import scheduleCalendarApi from '~/api/modules/schedule-calendar'
 import useUserStore from '~/store/modules/user'
 const date = ref(new Date())
-const list = ref<ScheduleCalendar[]>([])
+const list = ref<ScheduleCalendarDTO[]>([])
 const userStore = useUserStore()
 const getScheduleCalendarList = () => {
-  scheduleCalendarApi.getScheduleCalendarList().then(res => {
+  scheduleCalendarApi.getScheduleCalendarDTOList().then(res => {
     list.value = res.data
   })
 }

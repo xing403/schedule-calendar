@@ -17,3 +17,25 @@ interface ScheduleCalendar {
   updateBy?: string;
   delFlag?: string;
 }
+
+interface ScheduleOperationEntity {
+  operationId?: number;
+  scheduleId?: number;
+  operationDate?: string;
+  operationStatus?: string;
+  createTime?: Date;
+  createBy?: string;
+  updateTime?: Date;
+  updateBy?: string;
+  delFlag?: string;
+}
+
+interface ScheduleOperationMap {
+  finish: Date[];
+  cancel: Date[];
+  delete: Date[];
+}
+
+interface ScheduleCalendarDTO extends ScheduleCalendar {
+  operation: ScheduleOperationMap;
+}

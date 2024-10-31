@@ -8,7 +8,7 @@ const cronResult: {
   [key: string]: Dayjs[]
 } = {}
 
-const modelValue = defineModel<ScheduleCalendar[]>()
+const modelValue = defineModel<ScheduleCalendarDTO[]>()
 const date = defineModel<Date>('date')
 
 
@@ -27,12 +27,24 @@ const list = computed(() => {
     const tempDayStr = tempDay.format('YYYY-MM-DD')
     modelValue.value?.forEach(item => {
       let inRange = false, isSide = false
+
+      if (item.operation.delete.some(item => dayjs(item).isSame(tempDay, 'date'))) {
+        return
+      }
+
+      let state = 'waiting';
+      if (item.operation.finish.some(item => dayjs(item).isSame(tempDay, 'date'))) {
+        state = 'finish'
+      } else if (item.operation.cancel.some(item => dayjs(item).isSame(tempDay, 'date'))) {
+        state = 'cancel'
+      }
+
       if (item.scheduleModel === '0') {
         const start = dayjs(item.scheduleRangeStart)
         const end = dayjs(item.scheduleRangeEnd)
 
         inRange = tempDay.isBetween(start, end)
-        isSide = start.isSame(tempDayStr) || end.isSame(tempDayStr)
+        isSide = start.isSame(tempDay, 'date') || end.isSame(tempDay, 'date')
       } else if (item.scheduleModel === '1') {
         inRange = dayjs(item.scheduleDate).isSame(tempDayStr)
       } else if (item.scheduleModel === '2') {
@@ -44,6 +56,7 @@ const list = computed(() => {
       if (inRange || isSide) {
         temp.push({
           title: item.scheduleTitle,
+          state,
           color: randomColor({
             seed: item.scheduleId,
             luminosity: 'light',
