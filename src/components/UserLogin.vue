@@ -20,6 +20,7 @@ const handleLoginUser = () => {
     if (valid) {
       userStore.handleUserLogin(loginForm.value).then(() => {
         ElMessage.success('登录成功')
+        loginFormRef.value.resetFields()
         loginDialog.value = false
         router.replace({})
       }).catch((error) => {
@@ -45,7 +46,7 @@ const handleLoginUser = () => {
       </el-form>
     </div>
     <template #footer>
-      <el-button type="primary" size="default" @click="handleLoginUser" w-full>登录</el-button>
+      <el-button type="primary" @click="handleLoginUser" w-full>登录</el-button>
     </template>
   </el-dialog>
 </template>

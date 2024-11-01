@@ -1,11 +1,15 @@
 <script setup lang="ts">
 import dayjs from 'dayjs';
+import { Plus, Sunny, Moon, Warning } from '@element-plus/icons-vue'
 import useUserStore from '~/store/modules/user'
 const date = defineModel<Date>('date')
 const userStore = useUserStore()
 
-const loginDialog = ref(!userStore.userIsLogin)
+const loginDialog = ref(false)
 const addScheduleCalendarRef = ref()
+const isDark = useDark()
+const toggleDark = useToggle(isDark)
+
 const handleCommand = (command: string) => {
   switch (command) {
     case 'logout':
@@ -13,6 +17,9 @@ const handleCommand = (command: string) => {
       break
     case 'add-schedule-calendar':
       addScheduleCalendarRef.value.open()
+      break
+    case 'change-theme':
+      toggleDark()
       break
   }
 }
@@ -43,12 +50,13 @@ const today = () => {
         <el-avatar fit="fill">{{ userStore.information?.username }}</el-avatar>
         <template #dropdown>
           <el-dropdown-menu>
-            <el-dropdown-item command="add-schedule-calendar">新增日程</el-dropdown-item>
-            <el-dropdown-item divided command="logout">注销登录</el-dropdown-item>
+            <el-dropdown-item command="change-theme" :icon="isDark ? Sunny : Moon">改变主题</el-dropdown-item>
+            <el-dropdown-item command="add-schedule-calendar" :icon="Plus">新增日程</el-dropdown-item>
+            <el-dropdown-item divided command="logout" :icon="Warning">注销登录</el-dropdown-item>
           </el-dropdown-menu>
         </template>
       </el-dropdown>
-      <el-button v-else type="primary" @click="loginDialog = true">登录</el-button>
+      <el-button v-else size="small" @click="loginDialog = true">登录</el-button>
     </div>
     <user-login v-model="loginDialog" />
     <add-schedule-calendar ref="addScheduleCalendarRef" />
