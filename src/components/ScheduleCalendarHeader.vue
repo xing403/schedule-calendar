@@ -7,8 +7,6 @@ const userStore = useUserStore()
 
 const loginDialog = ref(false)
 const addScheduleCalendarRef = ref()
-const isDark = useDark()
-const toggleDark = useToggle(isDark)
 
 const handleCommand = (command: string) => {
   switch (command) {

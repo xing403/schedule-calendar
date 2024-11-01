@@ -12,10 +12,13 @@ const getScheduleCalendarList = () => {
   loading.value = true
   scheduleCalendarApi.getScheduleCalendarDTOList().then(res => {
     list.value = res.data
+  }).catch(() => {
+    list.value = []
   }).finally(() => {
     loading.value = false
   })
 }
+
 watch(() => userStore.userIsLogin, (val) => {
   val ? getScheduleCalendarList() : list.value = []
 }, {

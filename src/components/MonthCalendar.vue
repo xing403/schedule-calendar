@@ -21,8 +21,12 @@ const list = computed(() => {
   const startDay = dayjs(date.value).startOf('month').startOf('week')
   // 当前月最后一天所在周的最后一天
   const endDay = dayjs(date.value).endOf('month').endOf('week')
+
   const tempData: any = {}
   const diff = endDay.diff(startDay, 'day')
+
+  const theme = isDark.value ? 'dark' : 'light'
+
   Array.from({ length: diff + 1 }, (_, index) => {
     const temp: any = []
     const tempDay = startDay.add(index, 'day')
@@ -62,7 +66,7 @@ const list = computed(() => {
           state,
           color: randomColor({
             seed: item.scheduleId,
-            luminosity: 'light',
+            luminosity: theme,
             hue: 'blue',
           }).toHexString(),
         })
