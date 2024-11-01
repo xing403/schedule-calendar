@@ -4,23 +4,28 @@ import useUserStore from '~/store/modules/user'
 const date = ref(new Date())
 const list = ref<ScheduleCalendarDTO[]>([])
 const userStore = useUserStore()
+const loading = ref(false)
 const getScheduleCalendarList = () => {
+  if (loading.value) {
+    return
+  }
+  loading.value = true
   scheduleCalendarApi.getScheduleCalendarDTOList().then(res => {
     list.value = res.data
+  }).finally(() => {
+    loading.value = false
   })
 }
-watchEffect(() => {
-  if (userStore.userIsLogin) {
-    getScheduleCalendarList()
-  } else {
-    list.value = []
-  }
+watch(() => userStore.userIsLogin, (val) => {
+  val ? getScheduleCalendarList() : list.value = []
+}, {
+  immediate: true
 })
 
 </script>
 
 <template>
-  <month-calendar v-model:date="date" v-model="list">
+  <month-calendar v-loading="loading" v-model:date="date" v-model="list" @refresh="getScheduleCalendarList()">
     <template #header>
       <schedule-calendar-header v-model:date="date" />
     </template>

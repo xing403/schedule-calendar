@@ -3,6 +3,8 @@ import CalendarItem from './CalendarItem.vue'
 import dayjs, { Dayjs } from 'dayjs'
 import isBetween from 'dayjs/plugin/isBetween'
 import { random as randomColor } from '@ctrl/tinycolor';
+import { insertOrUpdateScheduleOperation } from '~/api/modules/schedule-operation'
+import { ElMessage } from 'element-plus';
 
 const cronResult: {
   [key: string]: Dayjs[]
@@ -10,7 +12,7 @@ const cronResult: {
 
 const modelValue = defineModel<ScheduleCalendarDTO[]>()
 const date = defineModel<Date>('date')
-
+const emit = defineEmits(['refresh'])
 
 dayjs.extend(isBetween)
 
@@ -55,6 +57,7 @@ const list = computed(() => {
       }
       if (inRange || isSide) {
         temp.push({
+          id: item.scheduleId,
           title: item.scheduleTitle,
           state,
           color: randomColor({
@@ -69,6 +72,47 @@ const list = computed(() => {
   })
   return tempData
 });
+const detailDialog = ref(false)
+const handling = ref(false)
+const current = ref<{
+  id: number,
+  day: string,
+  status: string,
+  instance?: ScheduleCalendarDTO
+}>({
+  status: 'waiting',
+  day: dayjs().format('YYYY-MM-DD'),
+  id: 0,
+  instance: undefined
+})
+const onItemClick = (data: any) => {
+  ({
+    day: current.value.day,
+    id: current.value.id,
+    status: current.value.status
+  } = data)
+  current.value.instance = modelValue.value?.find((item: ScheduleCalendarDTO) => item.scheduleId === data.id)
+  detailDialog.value = true
+}
+
+const handleItemStatus = (status: string) => {
+  if (handling.value) {
+    return
+  }
+  handling.value = true
+  insertOrUpdateScheduleOperation({
+    scheduleId: current.value.id,
+    operationDate: current.value.day,
+    operationStatus: status
+  } as ScheduleOperationEntity).then((res: any) => {
+    ElMessage.success(res.message)
+    emit('refresh')
+  }).finally(() => {
+    handling.value = false
+    detailDialog.value = false
+  })
+
+}
 </script>
 
 <template>
@@ -78,9 +122,38 @@ const list = computed(() => {
         <slot name="header" />
       </template>
       <template #date-cell="{ data }">
-        <calendar-item :day="data.day" :list="list[data.day]" />
+        <calendar-item :day="data.day" :list="list[data.day]" @item-click="onItemClick" />
       </template>
     </el-calendar>
+
+    <el-dialog title="日程详情" v-model="detailDialog" width="450px" destroy-on-close>
+      <el-descriptions :column="1" border>
+        <el-descriptions-item label="日程标题" label-class-name="w-100px">
+          {{ current.instance?.scheduleTitle }}
+        </el-descriptions-item>
+        <el-descriptions-item label="时间" label-class-name="w-100px">
+          {{ current.day }}
+        </el-descriptions-item>
+        <el-descriptions-item label="当前状态" label-class-name="w-100px">
+          {{ current.status }}
+        </el-descriptions-item>
+      </el-descriptions>
+      <template #footer>
+        <el-button-group w-full grid style="grid-template-columns:repeat(3, 1fr)">
+          <el-popconfirm title="确定删除日程？这是不可逆的" @confirm="handleItemStatus('delete')">
+            <template #reference>
+              <el-button :loading="handling" :disabled="handling || current.status === 'delete'"
+                type="danger">删除</el-button>
+            </template>
+          </el-popconfirm>
+          <el-button :loading="handling" :disabled="handling || current.status === 'cancel'" handling type="warning"
+            @click="handleItemStatus('cancel')">放弃</el-button>
+          <el-button :loading="handling" :disabled="handling || current.status === 'finish'" type="success"
+            @click="handleItemStatus('finish')">完成</el-button>
+        </el-button-group>
+      </template>
+    </el-dialog>
+
   </div>
 </template>
 <style lang="postcss" scoped>
@@ -96,6 +169,9 @@ const list = computed(() => {
     }
   }
 
-
+  .el-button-group:after,
+  .el-button-group:before {
+    content: none;
+  }
 }
 </style>
