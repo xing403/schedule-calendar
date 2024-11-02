@@ -1,4 +1,4 @@
-import { RemovableRef } from '@vueuse/core'
+import type { RemovableRef } from '@vueuse/core'
 import { ElMessage } from 'element-plus'
 import { defineStore } from 'pinia'
 import userApi from '~/api/modules/user'
@@ -6,12 +6,13 @@ import userApi from '~/api/modules/user'
 export default defineStore('user', () => {
   const router = useRouter()
 
+  const username = ref('')
   const token = ref<RemovableRef<string>>(useLocalStorage('token', '', { deep: true }))
   const information = ref<any>(null)
 
   const userIsLogin = computed(() => !!token.value)
 
-  const handleUserLogin = ({ username, password }: { username: string, password: string }) => {
+  const handleUserLogin = ({ username, password }: { username: string; password: string }) => {
     const form = new FormData()
     form.append('username', username)
     form.append('password', password)
@@ -23,7 +24,8 @@ export default defineStore('user', () => {
   const getUserInformation = () => {
     return userApi.getUserInfo().then(({ data }: { data: any }) => {
       information.value = data
-    })
+      username.value = data.username
+    }).catch((err) => { ElMessage.warning(err.message) })
   }
 
   const reLogin = () => {
@@ -32,8 +34,8 @@ export default defineStore('user', () => {
     router.replace({
       name: 'login',
       query: {
-        redirect: router.currentRoute.value.fullPath
-      }
+        redirect: router.currentRoute.value.fullPath,
+      },
     })
   }
 
@@ -46,11 +48,12 @@ export default defineStore('user', () => {
 
   return {
     token,
+    username,
     userIsLogin,
     information,
     reLogin,
     handleUserLogin,
     handleUserLogout,
-    getUserInformation
+    getUserInformation,
   }
 })

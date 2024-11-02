@@ -8,6 +8,7 @@ const date = defineModel<Date>('date')
 const userStore = useUserStore()
 const loginDialog = ref(false)
 const addScheduleCalendarRef = ref()
+const username = computed(() => userStore.username)
 
 function handleCommand(command: string) {
   switch (command) {
@@ -52,7 +53,7 @@ function today() {
 
       <el-dropdown v-if="userStore.userIsLogin" trigger="click" @command="handleCommand">
         <el-avatar fit="fill">
-          {{ userStore.information?.username }}
+          {{ username }}
         </el-avatar>
         <template #dropdown>
           <el-dropdown-menu>
