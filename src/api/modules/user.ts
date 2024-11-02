@@ -1,9 +1,9 @@
-import api from "..";
+import api from '..'
 
 export const login = (data: FormData) => api.post('/login', data)
-export const register = (data: { username: string, password: string }) => api.post('/register', data);
+export const register = (data: { username: string; password: string }) => api.post('/register', data)
 export const logout = () => api.post('/logout')
-export const getUserList = (params: any) => api.get('/user/list', { params });
+export const getUserList = (params: any) => api.get('/user/list', { params })
 export const getAllLoginUser = () => api.get('/user/allLoginUser')
 export const getUserInfo = () => api.get('/user/information')
 export const getUserInfoByUserId = (id: number) => api.get(`/user/information/${id}`)
@@ -32,5 +32,5 @@ export default {
   disableUserByUserId,
   getLoginQRCode,
   checkQRCodeStatus,
-  getQRCodInformation
+  getQRCodInformation,
 }

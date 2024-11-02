@@ -1,8 +1,9 @@
 <script setup lang="ts">
-import { ElMessage } from 'element-plus';
-import { insertScheduleCalendar } from '~/api/modules/schedule-calendar';
-const dialog = ref(false)
+import { ElMessage } from 'element-plus'
+import { insertScheduleCalendar } from '~/api/modules/schedule-calendar'
 
+const emit = defineEmits(['refresh'])
+const dialog = ref(false)
 const loading = ref(false)
 const formRef = ref()
 const scheduleRange = ref([])
@@ -30,11 +31,13 @@ const scheduleModelGroup = [{
   label: 'cron 表达式',
 }]
 
-const handleSubmit = () => {
+function handleSubmit() {
   formRef.value.validate((valid: boolean) => {
     if (valid) {
       insertScheduleCalendar(form.value).then(() => {
         ElMessage.success('创建成功')
+        formRef.value.resetFields()
+        emit('refresh')
         dialog.value = false
       })
     }
@@ -45,20 +48,18 @@ watch(scheduleRange, (val) => {
   form.value.scheduleRangeEnd = val[1]
 })
 
-const open = () => {
+function open() {
   dialog.value = true
 }
 
 defineExpose({
-  open
+  open,
 })
-
-
 </script>
 
 <template>
-  <el-dialog title="新增日程" v-model="dialog" width="400">
-    <el-form :model="form" ref="formRef" :rules="rules" label-position="top">
+  <el-dialog v-model="dialog" title="新增日程" width="400">
+    <el-form ref="formRef" :model="form" :rules="rules" label-position="top">
       <el-form-item label="日程标题" prop="scheduleTitle">
         <el-input v-model="form.scheduleTitle" placeholder="请输入日程标题" />
       </el-form-item>
@@ -71,16 +72,17 @@ defineExpose({
         <el-date-picker v-model="scheduleRange" type="daterange" start-placeholder="开始日期" end-placeholder="结束日期" />
       </el-form-item>
       <el-form-item v-if="form.scheduleModel === '1'" label="日期" prop="scheduleDate">
-        <el-date-picker v-model="form.scheduleDate" type="date" placeholder="选择日期时间" />
+        <el-date-picker v-model="form.scheduleDate" type="date" placeholder="选择日期时间" format="YYYY-MM-DD" />
       </el-form-item>
       <el-form-item v-if="form.scheduleModel === '2'" label="表达式" prop="scheduleCron">
         <el-input v-model="form.scheduleCron" placeholder="请输入 cron 表达式" />
       </el-form-item>
 
       <el-form-item>
-        <el-button v-loading="loading" :disable="loading" type="primary" @click="handleSubmit">立即创建</el-button>
+        <el-button v-loading="loading" :disable="loading" type="primary" w-full @click="handleSubmit">
+          立即创建
+        </el-button>
       </el-form-item>
     </el-form>
-
   </el-dialog>
 </template>

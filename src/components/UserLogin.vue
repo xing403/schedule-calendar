@@ -1,6 +1,7 @@
 <script setup lang="ts">
-import { ElMessage } from 'element-plus';
+import { ElMessage } from 'element-plus'
 import useUserStore from '~/store/modules/user'
+
 const userStore = useUserStore()
 
 const loginDialog = defineModel()
@@ -8,14 +9,14 @@ const router = useRouter()
 
 const loginForm = ref({
   username: '',
-  password: ''
+  password: '',
 })
 const loginFormRules = {
   username: [{ required: true, message: '请输入用户名', trigger: 'blur' }],
-  password: [{ required: true, message: '请输入密码', trigger: 'blur' }]
+  password: [{ required: true, message: '请输入密码', trigger: 'blur' }],
 }
 const loginFormRef = ref()
-const handleLoginUser = () => {
+function handleLoginUser() {
   loginFormRef.value.validate(async (valid: boolean) => {
     if (valid) {
       userStore.handleUserLogin(loginForm.value).then(() => {
@@ -33,20 +34,24 @@ const handleLoginUser = () => {
 </script>
 
 <template>
-  <el-dialog title="登录" v-model="loginDialog" width="300px">
-    <div class="login-content" flex="~ col" justify-center items-center>
-      <el-form :model="loginForm" ref="loginFormRef" :rules="loginFormRules" label-position="top" w-full :inline="false">
+  <el-dialog v-model="loginDialog" title="登录" width="300px">
+    <div class="login-content" flex="~ col" items-center justify-center>
+      <el-form ref="loginFormRef" :model="loginForm" :rules="loginFormRules" label-position="top" w-full :inline="false">
         <el-form-item prop="username">
           <el-input v-model="loginForm.username" placeholder="请输入用户名" />
         </el-form-item>
         <el-form-item prop="password">
-          <el-input v-model="loginForm.password" type="password" placeholder="请输入密码" show-password
-            @keydown.enter="handleLoginUser" />
+          <el-input
+            v-model="loginForm.password" type="password" placeholder="请输入密码" show-password
+            @keydown.enter="handleLoginUser"
+          />
         </el-form-item>
       </el-form>
     </div>
     <template #footer>
-      <el-button type="primary" @click="handleLoginUser" w-full>登录</el-button>
+      <el-button type="primary" w-full @click="handleLoginUser">
+        登录
+      </el-button>
     </template>
   </el-dialog>
 </template>

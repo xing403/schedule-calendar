@@ -6,11 +6,10 @@ export const updateScheduleCalendar = (data: ScheduleCalendar) => api.put('/sche
 export const insertScheduleCalendar = (data: ScheduleCalendar) => api.post('/schedule-calendar', data)
 export const deleteScheduleCalendar = (scheduleId: number) => api.delete(`/schedule-calendar/${scheduleId}`)
 
-
 export default {
   getScheduleCalendarList,
   getScheduleCalendarDTOList,
   updateScheduleCalendar,
   insertScheduleCalendar,
-  deleteScheduleCalendar
+  deleteScheduleCalendar,
 }
