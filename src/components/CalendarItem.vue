@@ -25,7 +25,7 @@ function getStateIcon(state: string) {
 </script>
 
 <template>
-  <div select-none @click="handleClickItem">
+  <div select-none @click.stop="handleClickItem">
     <slot name="header">
       <div text-5 text="hover:trueGray">
         {{ props.day }}
@@ -33,9 +33,8 @@ function getStateIcon(state: string) {
     </slot>
     <el-scrollbar :height="props.scene === 'drawer' ? '' : '100px'">
       <el-button
-        v-for="item, index in list" :key="props.day + index" :loading="item.state === 'waiting'"
-        :color="item.color" w-full justify-start :icon="getStateIcon(item.state)"
-        @click.stop="handleClickScheduleItem(item)"
+        v-for="item, index in list" :key="props.day + index" :color="item.color" w-full justify-start
+        :icon="getStateIcon(item.state)" @click.stop="handleClickScheduleItem(item)"
       >
         <span text="light:black dark:white">{{ item.title }}</span>
       </el-button>

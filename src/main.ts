@@ -1,5 +1,4 @@
 import { createApp } from 'vue'
-import VConsole from 'vconsole'
 import ElementPlus from 'element-plus'
 import router from './router'
 import App from './App.vue'
@@ -13,7 +12,6 @@ import 'uno.css'
 import store from './store'
 import './assets/styles/main.css'
 
-new VConsole({ theme: 'dark' })
 const app = createApp(App)
 
 app.use(ElementPlus)
