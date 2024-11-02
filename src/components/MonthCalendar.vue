@@ -4,6 +4,7 @@ import dayjs from 'dayjs'
 import isBetween from 'dayjs/plugin/isBetween'
 import { random as randomColor } from '@ctrl/tinycolor'
 import { ElMessage } from 'element-plus'
+import { Check, CloseBold, Delete } from '@element-plus/icons-vue'
 import CalendarItem from './CalendarItem.vue'
 import { insertOrUpdateScheduleOperation } from '~/api/modules/schedule-operation'
 
@@ -16,7 +17,7 @@ const cronResult: {
 const modelValue = defineModel<ScheduleCalendarDTO[]>()
 const date = defineModel<Date>('date')
 dayjs.extend(isBetween)
-
+const colors: any = []
 const list = computed(() => {
   // 当前月第一天所在周的第一天
   const startDay = dayjs(date.value).startOf('month').startOf('week')
@@ -27,7 +28,6 @@ const list = computed(() => {
   const diff = endDay.diff(startDay, 'day')
 
   const theme = isDark.value ? 'dark' : 'light'
-
   Array.from({ length: diff + 1 }, (_, index) => {
     const temp: any = []
     const tempDay = startDay.add(index, 'day')
@@ -61,16 +61,19 @@ const list = computed(() => {
           : getCronDate(item.scheduleCron, startDay, endDay)
         inRange = result.some(item => item.isSame(tempDayStr))
       }
+      let color = colors.find((clr: any) => clr.id === item.scheduleId)?.color
+
+      if (!color) {
+        color = randomColor({ luminosity: theme, hue: 'blue' }).toHexString()
+        colors.push({ id: item.scheduleId, color })
+      }
+
       if (inRange || isSide) {
         temp.push({
           id: item.scheduleId,
           title: item.scheduleTitle,
           state,
-          color: randomColor({
-            seed: item.scheduleId,
-            luminosity: theme,
-            hue: 'blue',
-          }).toHexString(),
+          color,
         })
       }
     })
@@ -92,7 +95,7 @@ const current = ref<{
   id: 0,
   instance: undefined,
 })
-function onItemClick(data: any) {
+function onClickScheduleItem(data: any) {
   ({
     day: current.value.day,
     id: current.value.id,
@@ -102,6 +105,13 @@ function onItemClick(data: any) {
   detailDialog.value = true
 }
 
+const detailDrawer = ref(false)
+const drawerDay = ref('')
+const drawerData = computed(() => list.value[drawerDay.value])
+function onClickItem({ day }: { day: string }) {
+  drawerDay.value = day
+  detailDrawer.value = true
+}
 function handleItemStatus(status: string) {
   if (handling.value)
     return
@@ -128,7 +138,7 @@ function handleItemStatus(status: string) {
         <slot name="header" />
       </template>
       <template #date-cell="{ data }">
-        <CalendarItem :day="data.day" :list="list[data.day]" @item-click="onItemClick" />
+        <CalendarItem :day="data.day" :list="list[data.day]" @item-click="onClickScheduleItem" @click="onClickItem" />
       </template>
     </el-calendar>
 
@@ -141,26 +151,32 @@ function handleItemStatus(status: string) {
           {{ current.day }}
         </el-descriptions-item>
         <el-descriptions-item label="当前状态" label-class-name="w-100px">
-          {{ current.status }}
+          <el-tag v-if="current.status === 'waiting'" v-text="'进行中'" />
+          <el-tag v-if="current.status === 'cancel'" type="info" v-text="'已取消'" />
+          <el-tag v-if="current.status === 'finish'" type="success" v-text="'已完成'" />
+          <el-tag v-if="current.status === 'delete'" type="danger" v-text="'已删除'" />
         </el-descriptions-item>
       </el-descriptions>
       <template #footer>
         <el-button-group grid w-full style="grid-template-columns:repeat(3, 1fr)">
           <el-popconfirm title="确定删除日程？这是不可逆的" @confirm="handleItemStatus('delete')">
             <template #reference>
-              <el-button :loading="handling" :disabled="handling || current.status === 'delete'" type="danger">
+              <el-button
+                :loading="handling" :disabled="handling || current.status === 'delete'" type="danger"
+                :icon="Delete"
+              >
                 删除
               </el-button>
             </template>
           </el-popconfirm>
           <el-button
             :loading="handling" :disabled="handling || current.status === 'cancel'" handling type="warning"
-            @click="handleItemStatus('cancel')"
+            :icon="CloseBold" @click="handleItemStatus('cancel')"
           >
             放弃
           </el-button>
           <el-button
-            :loading="handling" :disabled="handling || current.status === 'finish'" type="success"
+            :loading="handling" :disabled="handling || current.status === 'finish'" type="success" :icon="Check"
             @click="handleItemStatus('finish')"
           >
             完成
@@ -168,6 +184,14 @@ function handleItemStatus(status: string) {
         </el-button-group>
       </template>
     </el-dialog>
+
+    <el-drawer v-model="detailDrawer" :title="drawerDay" :destroy-on-close="true">
+      <CalendarItem :day="drawerDay" :list="drawerData" scene="drawer" @item-click="onClickScheduleItem">
+        <template #header>
+          <div />
+        </template>
+      </CalendarItem>
+    </el-drawer>
   </div>
 </template>
 

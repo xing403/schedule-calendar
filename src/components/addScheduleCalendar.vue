@@ -69,10 +69,16 @@ defineExpose({
         </el-radio-group>
       </el-form-item>
       <el-form-item v-if="form.scheduleModel === '0'" label="日期范围">
-        <el-date-picker v-model="scheduleRange" type="daterange" start-placeholder="开始日期" end-placeholder="结束日期" />
+        <el-date-picker
+          v-model="scheduleRange" type="daterange" start-placeholder="开始日期" end-placeholder="结束日期"
+          format="YYYY-MM-DD" value-format="YYYY-MM-DD"
+        />
       </el-form-item>
       <el-form-item v-if="form.scheduleModel === '1'" label="日期" prop="scheduleDate">
-        <el-date-picker v-model="form.scheduleDate" type="date" placeholder="选择日期时间" format="YYYY-MM-DD" />
+        <el-date-picker
+          v-model="form.scheduleDate" type="date" placeholder="选择日期时间" format="YYYY-MM-DD"
+          value-format="YYYY-MM-DD"
+        />
       </el-form-item>
       <el-form-item v-if="form.scheduleModel === '2'" label="表达式" prop="scheduleCron">
         <el-input v-model="form.scheduleCron" placeholder="请输入 cron 表达式" />

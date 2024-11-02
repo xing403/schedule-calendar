@@ -7,4 +7,5 @@ export interface ScheduleItem {
 export interface CalendarItemProps {
   day: string
   list: Array<ScheduleItem>
+  scene?: string
 }
