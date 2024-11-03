@@ -30,12 +30,9 @@ interface ScheduleOperationEntity {
   delFlag?: string;
 }
 
-interface ScheduleOperationGroup {
-  finish: Date[];
-  cancel: Date[];
-  delete: Date[];
-}
 
 interface ScheduleCalendarDTO extends ScheduleCalendar {
-  group: ScheduleOperationGroup;
+  finishDates: string[];
+  cancelDates: string[];
+  deleteDates: string[];
 }

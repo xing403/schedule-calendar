@@ -10,14 +10,14 @@ function handleClickScheduleItem(item: ScheduleItem) {
 function handleClickItem() {
   emit('click', { day: props.day })
 }
-function getStateIcon(state: string) {
+function getStateColor(state: string) {
   switch (state) {
     case 'finish':
-      return h(SuccessFilled, { style: { color: 'var(--el-color-success)' } })
+      return 'var(--el-color-success)'
     case 'cancel':
-      return h(CircleCloseFilled, { style: { color: 'var(--el-color-danger)' } })
+      return 'var(--el-color-danger)'
     case 'waiting':
-      return h(Loading, { style: { color: 'var(--el-color-primary)' } })
+      return 'var(--el-color-info)'
     default:
       return undefined
   }
@@ -33,9 +33,16 @@ function getStateIcon(state: string) {
     </slot>
     <el-scrollbar :height="props.scene === 'drawer' ? '' : '100px'">
       <el-button
-        v-for="item, index in list" :key="props.day + index" :color="item.color" w-full justify-start
-        :icon="getStateIcon(item.state)" @click.stop="handleClickScheduleItem(item)"
+        v-for="item, index in list" :key="props.day + index" :color="isDark ? item.darkColor : item.lightColor"
+        :disabled="false" w-full justify-start @click.stop="handleClickScheduleItem(item)"
       >
+        <template #icon>
+          <el-icon :class="{ 'is-loading': item.state === 'waiting' }" :color="getStateColor(item.state)">
+            <SuccessFilled v-if="item.state === 'finish'" />
+            <CircleCloseFilled v-if="item.state === 'cancel'" />
+            <Loading v-if="item.state === 'waiting'" />
+          </el-icon>
+        </template>
         <span text="light:black dark:white">{{ item.title }}</span>
       </el-button>
     </el-scrollbar>

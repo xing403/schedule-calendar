@@ -2,7 +2,8 @@ export interface ScheduleItem {
   id: number,
   title: string,
   state: string,
-  color: string
+  darkColor: string,
+  lightColor: string
 }
 export interface CalendarItemProps {
   day: string

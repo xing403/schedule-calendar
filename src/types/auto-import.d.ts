@@ -32,11 +32,15 @@ declare global {
   const eagerComputed: typeof import('@vueuse/core')['eagerComputed']
   const effectScope: typeof import('vue')['effectScope']
   const extendRef: typeof import('@vueuse/core')['extendRef']
-  const getCronDate: typeof import('../composables/getCronDate')['getCronDate']
+  const getCronDate: typeof import('../composables/formatScheduleCalendar')['getCronDate']
   const getCurrentInstance: typeof import('vue')['getCurrentInstance']
   const getCurrentScope: typeof import('vue')['getCurrentScope']
+  const getMonthStartAndEnd: typeof import('../composables/formatScheduleCalendar')['getMonthStartAndEnd']
+  const getScheduleCalendarRangeDate: typeof import('../composables/formatScheduleCalendar')['getScheduleCalendarRangeDate']
+  const getScheduleCalendarRangeDateByScheduleModel: typeof import('../composables/formatScheduleCalendar')['getScheduleCalendarRangeDateByScheduleModel']
   const h: typeof import('vue')['h']
   const ignorableWatch: typeof import('@vueuse/core')['ignorableWatch']
+  const initMonthData: typeof import('../composables/formatScheduleCalendar')['initMonthData']
   const inject: typeof import('vue')['inject']
   const injectLocal: typeof import('@vueuse/core')['injectLocal']
   const isDark: typeof import('../composables/index')['isDark']
@@ -87,6 +91,7 @@ declare global {
   const resolveComponent: typeof import('vue')['resolveComponent']
   const resolveRef: typeof import('@vueuse/core')['resolveRef']
   const resolveUnref: typeof import('@vueuse/core')['resolveUnref']
+  const scheduleCalendarEveryDay: typeof import('../composables/formatScheduleCalendar')['scheduleCalendarEveryDay']
   const shallowReactive: typeof import('vue')['shallowReactive']
   const shallowReadonly: typeof import('vue')['shallowReadonly']
   const shallowRef: typeof import('vue')['shallowRef']
@@ -328,11 +333,15 @@ declare module 'vue' {
     readonly eagerComputed: UnwrapRef<typeof import('@vueuse/core')['eagerComputed']>
     readonly effectScope: UnwrapRef<typeof import('vue')['effectScope']>
     readonly extendRef: UnwrapRef<typeof import('@vueuse/core')['extendRef']>
-    readonly getCronDate: UnwrapRef<typeof import('../composables/getCronDate')['getCronDate']>
+    readonly getCronDate: UnwrapRef<typeof import('../composables/formatScheduleCalendar')['getCronDate']>
     readonly getCurrentInstance: UnwrapRef<typeof import('vue')['getCurrentInstance']>
     readonly getCurrentScope: UnwrapRef<typeof import('vue')['getCurrentScope']>
+    readonly getMonthStartAndEnd: UnwrapRef<typeof import('../composables/formatScheduleCalendar')['getMonthStartAndEnd']>
+    readonly getScheduleCalendarRangeDate: UnwrapRef<typeof import('../composables/formatScheduleCalendar')['getScheduleCalendarRangeDate']>
+    readonly getScheduleCalendarRangeDateByScheduleModel: UnwrapRef<typeof import('../composables/formatScheduleCalendar')['getScheduleCalendarRangeDateByScheduleModel']>
     readonly h: UnwrapRef<typeof import('vue')['h']>
     readonly ignorableWatch: UnwrapRef<typeof import('@vueuse/core')['ignorableWatch']>
+    readonly initMonthData: UnwrapRef<typeof import('../composables/formatScheduleCalendar')['initMonthData']>
     readonly inject: UnwrapRef<typeof import('vue')['inject']>
     readonly injectLocal: UnwrapRef<typeof import('@vueuse/core')['injectLocal']>
     readonly isDark: UnwrapRef<typeof import('../composables/index')['isDark']>
@@ -383,6 +392,7 @@ declare module 'vue' {
     readonly resolveComponent: UnwrapRef<typeof import('vue')['resolveComponent']>
     readonly resolveRef: UnwrapRef<typeof import('@vueuse/core')['resolveRef']>
     readonly resolveUnref: UnwrapRef<typeof import('@vueuse/core')['resolveUnref']>
+    readonly scheduleCalendarEveryDay: UnwrapRef<typeof import('../composables/formatScheduleCalendar')['scheduleCalendarEveryDay']>
     readonly shallowReactive: UnwrapRef<typeof import('vue')['shallowReactive']>
     readonly shallowReadonly: UnwrapRef<typeof import('vue')['shallowReadonly']>
     readonly shallowRef: UnwrapRef<typeof import('vue')['shallowRef']>

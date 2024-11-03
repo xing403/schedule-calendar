@@ -1,8 +1,6 @@
 <script setup lang="ts">
-import type { Dayjs } from 'dayjs'
 import dayjs from 'dayjs'
 import isBetween from 'dayjs/plugin/isBetween'
-import { random as randomColor } from '@ctrl/tinycolor'
 import { ElMessage } from 'element-plus'
 import { Check, CloseBold, Delete } from '@element-plus/icons-vue'
 import CalendarItem from './CalendarItem.vue'
@@ -10,78 +8,17 @@ import { insertOrUpdateScheduleOperation } from '~/api/modules/schedule-operatio
 
 const emit = defineEmits(['refresh'])
 
-const cronResult: {
-  [key: string]: Dayjs[]
-} = {}
-
-const modelValue = defineModel<ScheduleCalendarDTO[]>()
+const modelValue = defineModel<ScheduleCalendarDTO[]>({
+  default: () => [],
+})
 const date = defineModel<Date>('date')
 dayjs.extend(isBetween)
-const colors: any = []
-const list = computed(() => {
-  // 当前月第一天所在周的第一天
-  const startDay = dayjs(date.value).startOf('month').startOf('week')
-  // 当前月最后一天所在周的最后一天
-  const endDay = dayjs(date.value).endOf('month').endOf('week')
 
-  const tempData: any = {}
-  const diff = endDay.diff(startDay, 'day')
-
-  const theme = isDark.value ? 'dark' : 'light'
-  Array.from({ length: diff + 1 }, (_, index) => {
-    const temp: any = []
-    const tempDay = startDay.add(index, 'day')
-    const tempDayStr = tempDay.format('YYYY-MM-DD')
-    modelValue.value?.forEach((item) => {
-      let inRange = false
-      let isSide = false
-
-      if (item.group.delete.some(item => dayjs(item).isSame(tempDay, 'date')))
-        return
-
-      let state = 'waiting'
-      if (item.group.finish.some(item => dayjs(item).isSame(tempDay, 'date')))
-        state = 'finish'
-      else if (item.group.cancel.some(item => dayjs(item).isSame(tempDay, 'date')))
-        state = 'cancel'
-
-      if (item.scheduleModel === '0') {
-        const start = dayjs(item.scheduleRangeStart)
-        const end = dayjs(item.scheduleRangeEnd)
-
-        inRange = tempDay.isBetween(start, end)
-        isSide = start.isSame(tempDay, 'date') || end.isSame(tempDay, 'date')
-      }
-      else if (item.scheduleModel === '1') {
-        inRange = dayjs(item.scheduleDate).isSame(tempDayStr)
-      }
-      else if (item.scheduleModel === '2') {
-        const result = cronResult[item.scheduleCron] && cronResult[item.scheduleCron].length > 0
-          ? cronResult[item.scheduleCron]
-          : getCronDate(item.scheduleCron, startDay, endDay)
-        inRange = result.some(item => item.isSame(tempDayStr))
-      }
-      let color = colors.find((clr: any) => clr.id === item.scheduleId)?.color
-
-      if (!color) {
-        color = randomColor({ luminosity: theme, hue: 'blue' }).toHexString()
-        colors.push({ id: item.scheduleId, color })
-      }
-
-      if (inRange || isSide) {
-        temp.push({
-          id: item.scheduleId,
-          title: item.scheduleTitle,
-          state,
-          color,
-        })
-      }
-    })
-    tempData[tempDayStr] = temp
-    return temp
-  })
-  return tempData
+const list = ref<any>({})
+watchArray(() => [date.value, modelValue.value], () => {
+  list.value = scheduleCalendarEveryDay(date.value, modelValue.value)
 })
+
 const detailDialog = ref(false)
 const handling = ref(false)
 const current = ref<{
@@ -107,7 +44,7 @@ function onClickScheduleItem(data: any) {
 
 const detailDrawer = ref(false)
 const drawerDay = ref('')
-const drawerData = computed(() => list.value[drawerDay.value])
+const drawerData = computed(() => list.value?.[drawerDay.value])
 function onClickItem({ day }: { day: string }) {
   drawerDay.value = day
   detailDrawer.value = true
@@ -138,7 +75,10 @@ function handleItemStatus(status: string) {
         <slot name="header" />
       </template>
       <template #date-cell="{ data }">
-        <CalendarItem :day="data.day" :list="list[data.day]" @item-click="onClickScheduleItem" @click="onClickItem" />
+        <CalendarItem
+          :day="data.day" :list="list?.[data.day] || []" @item-click="onClickScheduleItem"
+          @click="onClickItem"
+        />
       </template>
     </el-calendar>
 
