@@ -20,6 +20,12 @@ function getScheduleCalendarList() {
   })
 }
 
+const editScheduleCalendarRef = ref()
+function handleEditScheduleCalendar(id: number) {
+  const schedule = list.value.find((item: ScheduleCalendarDTO) => item.scheduleId === id)
+  editScheduleCalendarRef.value.setScheduleCalendar(schedule)
+}
+
 watch(() => userStore.userIsLogin, (val) => {
   val ? getScheduleCalendarList() : list.value = []
 }, {
@@ -28,9 +34,14 @@ watch(() => userStore.userIsLogin, (val) => {
 </script>
 
 <template>
-  <month-calendar v-model:date="date" v-model="list" v-loading="loading" @refresh="getScheduleCalendarList()">
+  <month-calendar
+    v-model:date="date" v-model="list" v-loading="loading" @refresh="getScheduleCalendarList()"
+    @edit-schedule="handleEditScheduleCalendar"
+  >
     <template #header>
       <schedule-calendar-header v-model:date="date" @refresh="getScheduleCalendarList()" />
     </template>
   </month-calendar>
+
+  <edit-schedule-calendar ref="editScheduleCalendarRef" @refresh="getScheduleCalendarList()" />
 </template>

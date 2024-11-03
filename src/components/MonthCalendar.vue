@@ -2,12 +2,12 @@
 import dayjs from 'dayjs'
 import isBetween from 'dayjs/plugin/isBetween'
 import { ElMessage } from 'element-plus'
-import { Check, CloseBold, Delete } from '@element-plus/icons-vue'
+import { Check, CloseBold, Delete, Edit } from '@element-plus/icons-vue'
 import CalendarItem from './CalendarItem.vue'
 import { insertOrUpdateScheduleOperation } from '~/api/modules/schedule-operation'
 import { deleteScheduleCalendar } from '~/api/modules/schedule-calendar'
 
-const emit = defineEmits(['refresh'])
+const emit = defineEmits(['refresh', 'editSchedule'])
 
 const modelValue = defineModel<ScheduleCalendarDTO[]>({
   default: () => [],
@@ -78,6 +78,12 @@ function handleItemStatus(status: string) {
     })
   }
 }
+
+function handleEditSchedule(id?: number) {
+  detailDialog.value = false
+  detailDrawer.value = false
+  emit('editSchedule', id)
+}
 </script>
 
 <template>
@@ -94,7 +100,21 @@ function handleItemStatus(status: string) {
       </template>
     </el-calendar>
 
-    <el-dialog v-model="detailDialog" title="日程详情" width="450px" destroy-on-close>
+    <el-dialog v-model="detailDialog" width="450px" destroy-on-close>
+      <template #header>
+        <div flex="~ row" items-center gap-2>
+          <span class="text-lg">日程详情</span>
+          <el-button :loading="handling" link :icon="Edit" @click="handleEditSchedule(current.instance?.scheduleId)" />
+          <el-popconfirm
+            width="220" title="确定删除全部日程吗? 这是不可逆的，请谨慎操作, 之前完成或被取消任务项不可再被修改"
+            @confirm="handleItemStatus('delete-all')"
+          >
+            <template #reference>
+              <el-button :loading="handling" link :disabled="handling" type="danger" :icon="Delete" />
+            </template>
+          </el-popconfirm>
+        </div>
+      </template>
       <el-descriptions :column="1" border>
         <el-descriptions-item label="日程标题" label-class-name="w-100px">
           {{ current.instance?.scheduleTitle }}
@@ -111,17 +131,13 @@ function handleItemStatus(status: string) {
       </el-descriptions>
       <template #footer>
         <el-button-group grid w-full style="grid-template-columns:repeat(auto-fit, minmax(25%, 1fr))">
-          <el-popconfirm title="确定删除日程？这是不可逆的" @confirm="handleItemStatus('delete-all')">
+          <el-popconfirm
+            width="220" title="确定删除这个日程? 这是不可逆的，请谨慎操作, 完成或被取消任务项不可再被修改"
+            @confirm="handleItemStatus('delete')"
+          >
             <template #reference>
               <el-button :loading="handling" :disabled="handling" type="danger" :icon="Delete">
-                删除(全部)
-              </el-button>
-            </template>
-          </el-popconfirm>
-          <el-popconfirm title="确定删除日程？这是不可逆的" @confirm="handleItemStatus('delete')">
-            <template #reference>
-              <el-button :loading="handling" :disabled="handling" type="danger" :icon="Delete">
-                删除(当前)
+                删除
               </el-button>
             </template>
           </el-popconfirm>
@@ -168,5 +184,9 @@ function handleItemStatus(status: string) {
   .el-button-group:before {
     content: none;
   }
+}
+
+.el-button+.el-button {
+  margin-left: 0;
 }
 </style>
