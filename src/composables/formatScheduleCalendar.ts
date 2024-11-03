@@ -54,8 +54,7 @@ export function getScheduleCalendarRangeDate(date: ConfigType, rangeStart: Confi
  */
 export function getCronDate(cron: string, start: Dayjs, end: Dayjs) {
   const interval = parser.parseExpression(cron, {
-    startDate: start.toDate(),
-    endDate: end.toDate(),
+    currentDate: start.toDate(),
     iterator: true,
   })
   const data: string[] = []
@@ -107,7 +106,8 @@ export function scheduleCalendarEveryDay(date: ConfigType, list: ScheduleCalenda
           state = 'finish'
         else if (item.cancelDates.includes(range[i]))
           state = 'cancel'
-        tempData[range[i]].push({
+
+        tempData[range[i]] && tempData[range[i]].push({
           id: item.scheduleId,
           title: item.scheduleTitle,
           state,
