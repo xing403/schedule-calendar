@@ -5,6 +5,7 @@ import { ElMessage } from 'element-plus'
 import { Check, CloseBold, Delete } from '@element-plus/icons-vue'
 import CalendarItem from './CalendarItem.vue'
 import { insertOrUpdateScheduleOperation } from '~/api/modules/schedule-operation'
+import { deleteScheduleCalendar } from '~/api/modules/schedule-calendar'
 
 const emit = defineEmits(['refresh'])
 
@@ -54,17 +55,28 @@ function handleItemStatus(status: string) {
     return
 
   handling.value = true
-  insertOrUpdateScheduleOperation({
-    scheduleId: current.value.id,
-    operationDate: current.value.day,
-    operationStatus: status,
-  } as ScheduleOperationEntity).then((res: any) => {
-    ElMessage.success(res.message)
-    emit('refresh')
-  }).finally(() => {
-    handling.value = false
-    detailDialog.value = false
-  })
+  if (status === 'delete-all') {
+    deleteScheduleCalendar(current.value.id).then(() => {
+      ElMessage.success('删除成功')
+      emit('refresh')
+    }).finally(() => {
+      handling.value = false
+      detailDialog.value = false
+    })
+  }
+  else {
+    insertOrUpdateScheduleOperation({
+      scheduleId: current.value.id,
+      operationDate: current.value.day,
+      operationStatus: status,
+    } as ScheduleOperationEntity).then((res: any) => {
+      ElMessage.success(res.message)
+      emit('refresh')
+    }).finally(() => {
+      handling.value = false
+      detailDialog.value = false
+    })
+  }
 }
 </script>
 
@@ -98,14 +110,18 @@ function handleItemStatus(status: string) {
         </el-descriptions-item>
       </el-descriptions>
       <template #footer>
-        <el-button-group grid w-full style="grid-template-columns:repeat(3, 1fr)">
+        <el-button-group grid w-full style="grid-template-columns:repeat(auto-fit, minmax(25%, 1fr))">
+          <el-popconfirm title="确定删除日程？这是不可逆的" @confirm="handleItemStatus('delete-all')">
+            <template #reference>
+              <el-button :loading="handling" :disabled="handling" type="danger" :icon="Delete">
+                删除(全部)
+              </el-button>
+            </template>
+          </el-popconfirm>
           <el-popconfirm title="确定删除日程？这是不可逆的" @confirm="handleItemStatus('delete')">
             <template #reference>
-              <el-button
-                :loading="handling" :disabled="handling || current.status === 'delete'" type="danger"
-                :icon="Delete"
-              >
-                删除
+              <el-button :loading="handling" :disabled="handling" type="danger" :icon="Delete">
+                删除(当前)
               </el-button>
             </template>
           </el-popconfirm>

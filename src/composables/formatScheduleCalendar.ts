@@ -89,16 +89,16 @@ export function getScheduleCalendarRangeDateByScheduleModel(item: ScheduleCalend
   return range.filter(r => !item.deleteDates.includes(r))
 }
 
+const colors: any = useLocalStorage('schedule-color', [], { deep: true })
 export function scheduleCalendarEveryDay(date: ConfigType, list: ScheduleCalendarDTO[]) {
   const tempData = initMonthData(dayjs(date))
-  const colors: any = []
   list.forEach((item) => {
     const range = getScheduleCalendarRangeDateByScheduleModel(item, date)
-    let { darkColor, lightColor } = colors.find((clr: any) => clr.id === item.scheduleId) || {}
+    let { darkColor, lightColor } = colors.value.find((clr: any) => clr.id === item.scheduleId) || {}
     if (!(darkColor && lightColor)) {
       darkColor = randomColor({ luminosity: 'dark', hue: 'blue' }).toHexString()
       lightColor = randomColor({ luminosity: 'light', hue: 'blue' }).toHexString()
-      colors.push({ id: item.scheduleId, darkColor, lightColor })
+      colors.value.push({ id: item.scheduleId, darkColor, lightColor })
     }
     range
       .forEach((_, i) => {
