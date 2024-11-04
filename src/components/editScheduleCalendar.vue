@@ -20,7 +20,14 @@ const form = ref<ScheduleCalendar>({
 const rules = {
   scheduleTitle: [{ required: true, message: '请输入日程标题', trigger: 'blur' }],
   scheduleModel: [{ required: true, message: '请选择日程类型', trigger: 'blur' }],
+  scheduleRangeStart: [{ required: true, message: '请选择日程起止日期', trigger: 'blur' }],
+  scheduleDate: [{ required: true, message: '请选择日程日期', trigger: 'blur' }],
+  scheduleCron: [
+    { required: true, message: '请输入 cron 表达式', trigger: 'blur' },
+    { validator: (_rule: any, value: string, callback: any) => validateCorn(`0 0 0 ${value}`, callback), trigger: 'blur' },
+  ],
 }
+
 const scheduleModelGroup = [{
   key: '0',
   label: '日期范围',
@@ -87,20 +94,25 @@ defineExpose({
           <el-radio v-for="item in scheduleModelGroup" :key="item.key" :value="item.key" :label="item.label" />
         </el-radio-group>
       </el-form-item>
-      <el-form-item v-if="form.scheduleModel === '0'" label="日期范围">
+      <el-form-item v-if="form.scheduleModel === '0'" label="日期范围" prop="scheduleRangeStart">
         <el-date-picker
-          v-model="scheduleRange" type="daterange" start-placeholder="开始日期" end-placeholder="结束日期"
-          format="YYYY-MM-DD" value-format="YYYY-MM-DD"
+          v-model="scheduleRange" :editable="false" type="daterange" start-placeholder="开始日期"
+          end-placeholder="结束日期" format="YYYY-MM-DD" value-format="YYYY-MM-DD"
         />
       </el-form-item>
       <el-form-item v-if="form.scheduleModel === '1'" label="日期" prop="scheduleDate">
         <el-date-picker
-          v-model="form.scheduleDate" type="date" placeholder="选择日期时间" format="YYYY-MM-DD"
+          v-model="form.scheduleDate" :editable="false" type="date" placeholder="选择日期时间" format="YYYY-MM-DD"
           value-format="YYYY-MM-DD"
         />
       </el-form-item>
       <el-form-item v-if="form.scheduleModel === '2'" label="表达式" prop="scheduleCron">
-        <el-input v-model="form.scheduleCron" placeholder="请输入 cron 表达式" />
+        <el-input v-model="form.scheduleCron" placeholder="请输入 cron 表达式, 例如 * * *">
+          <template #prepend>
+            0 0 0
+          </template>
+        </el-input>
+        <el-alert>只需要输入 日月周的格式即可，周可省略</el-alert>
       </el-form-item>
 
       <el-form-item>

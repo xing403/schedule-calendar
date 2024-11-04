@@ -83,7 +83,7 @@ export function getScheduleCalendarRangeDateByScheduleModel(item: ScheduleCalend
   }
   else if (item.scheduleModel === '2') {
     const [start, end] = getMonthStartAndEnd(date)
-    range = getCronDate(item.scheduleCron, start, end)
+    range = getCronDate(`0 0 0 ${item.scheduleCron}`, start, end)
   }
   return range.filter(r => !item.deleteDates.includes(r))
 }
