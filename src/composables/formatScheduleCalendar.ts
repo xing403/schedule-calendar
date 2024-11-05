@@ -42,7 +42,7 @@ export function getScheduleCalendarRangeDate(date: ConfigType, rangeStart: Confi
 
   const minDay = start.isBefore(rangeStart, 'date') ? rangeStart : start
   const maxDay = end.isAfter(rangeEnd, 'date') ? rangeEnd : end
-  return getCronDate(dayjs(date).format('0 0 0 * * *'), dayjs(minDay), dayjs(maxDay))
+  return getCronDate(dayjs(date).format('0 0 0 * * *'), dayjs(minDay).add(-1, 'day'), dayjs(maxDay))
 }
 
 /**
