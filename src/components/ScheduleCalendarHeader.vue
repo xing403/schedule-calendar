@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import dayjs from 'dayjs'
 import { Moon, MoreFilled, Plus, Setting, Sunny, Warning } from '@element-plus/icons-vue'
+import { ElMessage } from 'element-plus'
 import useUserStore from '~/store/modules/user'
 import useSystemStore from '~/store/modules/system'
 
@@ -39,11 +40,34 @@ function handleChangeMonthDate(diff?: number) {
 function today() {
   date.value = dayjs().toDate()
 }
+let count = 0
+let timer: any
+function enableDeveloperMode() {
+  count++
+  clearTimeout(timer)
+  if (count >= 10) {
+    if (!systemStore.isDeveloperMode) {
+      systemStore.isDeveloperMode = true
+      localStorage.setItem('is-developer-mode', 'true')
+      ElMessage.info('开启开发者模式，重启生效')
+    }
+  }
+  if (count > 20 && count < 30)
+    ElMessage.info('不要再点了')
+  else if (count > 30)
+    ElMessage.info(`再点就爆炸了 * ${count}`)
+
+  timer = setTimeout(() => {
+    count = 0
+  }, 350)
+}
 </script>
 
 <template>
   <div flex="~ row" h-full w-full items-center justify-between>
-    <div>{{ applicationName }}</div>
+    <div cursor-pointer select-none @click="enableDeveloperMode">
+      {{ applicationName }}
+    </div>
     <div flex="~ row" h-full items-center justify-end gap-15px>
       <el-button-group>
         <el-button size="small" @click="handleChangeMonthDate(-1)">

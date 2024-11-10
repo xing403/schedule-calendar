@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { CircleCloseFilled, Loading, SuccessFilled } from '@element-plus/icons-vue'
+import dayjs from 'dayjs'
 import type { CalendarItemProps, ScheduleItem } from './ScheduleItem'
 
 const props = defineProps<CalendarItemProps>()
@@ -28,7 +29,7 @@ function getStateColor(state: string) {
   <div select-none @click.stop="handleClickItem">
     <slot name="header">
       <div text-5 text="hover:trueGray">
-        {{ props.day }}
+        {{ dayjs(props.day).format('MM-DD') }}
       </div>
     </slot>
     <el-scrollbar :height="props.scene === 'drawer' ? '' : '100px'">
