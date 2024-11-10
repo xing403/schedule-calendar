@@ -2,6 +2,7 @@ import type { ConfigType, Dayjs } from 'dayjs'
 import { random as randomColor } from '@ctrl/tinycolor'
 import parser from 'cron-parser'
 import dayjs from 'dayjs'
+import useScheduleConfigStore from '~/store/modules/schedule-config'
 
 export function getMonthStartAndEnd(date: ConfigType) {
   // 当前月第一天所在周的第一天
@@ -88,16 +89,17 @@ export function getScheduleCalendarRangeDateByScheduleModel(item: ScheduleCalend
   return range.filter(r => !item.deleteDates.includes(r))
 }
 
-const colors: any = useLocalStorage('schedule-color', [], { deep: true })
 export function scheduleCalendarEveryDay(date: ConfigType, list: ScheduleCalendarDTO[]) {
   const tempData = initMonthData(dayjs(date))
+  const scheduleConfigStore = useScheduleConfigStore()
   list.forEach((item) => {
     const range = getScheduleCalendarRangeDateByScheduleModel(item, date)
-    let { darkColor, lightColor } = colors.value.find((clr: any) => clr.id === item.scheduleId) || {}
+    let { darkColor, lightColor } = scheduleConfigStore.colorsCache.find((clr: any) => clr.id === item.scheduleId) || {}
     if (!(darkColor && lightColor)) {
       darkColor = randomColor({ luminosity: 'dark', hue: 'blue' }).toHexString()
       lightColor = randomColor({ luminosity: 'light', hue: 'blue' }).toHexString()
-      colors.value.push({ id: item.scheduleId, darkColor, lightColor })
+      scheduleConfigStore.colors.push({ id: item.scheduleId, darkColor, lightColor })
+      scheduleConfigStore.colorsCache.push({ id: item.scheduleId, darkColor, lightColor })
     }
     range
       .forEach((_, i) => {

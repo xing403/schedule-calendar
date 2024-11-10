@@ -19,13 +19,12 @@ export default ({ mode, command }: any) => {
         '/api': {
           target: env.VITE_APP_PROXY_URL,
           changeOrigin: true,
-          rewrite: (path) => path.replace(/^\/api/, '')
-        }
-      }
+          rewrite: path => path.replace(/^\/api/, ''),
+        },
+      },
     },
     test: {
       environment: 'jsdom',
     },
   })
-
 }

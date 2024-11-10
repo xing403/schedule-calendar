@@ -6,9 +6,9 @@ import userApi from '~/api/modules/user'
 export default defineStore('user', () => {
   const router = useRouter()
 
-  const username = ref('')
   const token = ref<RemovableRef<string>>(useLocalStorage('token', '', { deep: true }))
   const information = ref<any>(null)
+  const username = computed(() => information.value?.username || '')
 
   const userIsLogin = computed(() => !!token.value)
 
@@ -24,7 +24,6 @@ export default defineStore('user', () => {
   const getUserInformation = () => {
     return userApi.getUserInfo().then(({ data }: { data: any }) => {
       information.value = data
-      username.value = data.username
     }).catch((err) => { ElMessage.warning(err.message) })
   }
 

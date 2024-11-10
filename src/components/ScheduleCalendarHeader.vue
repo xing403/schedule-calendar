@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import dayjs from 'dayjs'
-import { Moon, Plus, Sunny, Warning } from '@element-plus/icons-vue'
+import { Moon, Plus, Setting, Sunny, Warning } from '@element-plus/icons-vue'
 import useUserStore from '~/store/modules/user'
 
 const emit = defineEmits(['refresh'])
@@ -9,7 +9,7 @@ const userStore = useUserStore()
 const loginDialog = ref(false)
 const addScheduleCalendarRef = ref()
 const username = computed(() => userStore.username)
-
+const settingDialog = ref(false)
 function handleCommand(command: string) {
   switch (command) {
     case 'logout':
@@ -20,6 +20,9 @@ function handleCommand(command: string) {
       break
     case 'change-theme':
       toggleDark()
+      break
+    case 'setting':
+      settingDialog.value = true
       break
   }
 }
@@ -63,6 +66,9 @@ function today() {
             <el-dropdown-item command="add-schedule-calendar" :icon="Plus">
               新增日程
             </el-dropdown-item>
+            <el-dropdown-item command="setting" :icon="Setting">
+              更多设置
+            </el-dropdown-item>
             <el-dropdown-item divided command="logout" :icon="Warning">
               注销登录
             </el-dropdown-item>
@@ -75,5 +81,6 @@ function today() {
     </div>
     <user-login v-model="loginDialog" />
     <add-schedule-calendar ref="addScheduleCalendarRef" @refresh="() => $emit('refresh')" />
+    <more-setting v-model="settingDialog" />
   </div>
 </template>

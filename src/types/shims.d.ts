@@ -11,11 +11,11 @@ interface ScheduleCalendar {
   scheduleRangeEnd?: Date | string;
   scheduleDate?: Date | string;
   scheduleCron: string;
-  createTime?: Date;
+  createTime?: Date | string;
   createBy?: string;
-  updateTime?: Date;
+  updateTime?: Date | string;
   updateBy?: string;
-  delFlag?: string;
+  delFlag?: string | number;
 }
 
 interface ScheduleOperationEntity {

@@ -11,6 +11,7 @@ declare module 'vue' {
     CalendarItem: typeof import('./../components/CalendarItem.vue')['default']
     EditScheduleCalendar: typeof import('./../components/editScheduleCalendar.vue')['default']
     MonthCalendar: typeof import('./../components/MonthCalendar.vue')['default']
+    MoreSetting: typeof import('./../components/MoreSetting.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
     ScheduleCalendarHeader: typeof import('./../components/ScheduleCalendarHeader.vue')['default']
