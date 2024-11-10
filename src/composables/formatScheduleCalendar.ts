@@ -86,7 +86,7 @@ export function getScheduleCalendarRangeDateByScheduleModel(item: ScheduleCalend
     const [start, end] = getMonthStartAndEnd(date)
     range = getCronDate(`0 0 0 ${item.scheduleCron}`, start, end)
   }
-  return range.filter(r => !item.deleteDates.includes(r))
+  return range.filter(r => !item.deleteDates?.includes(r))
 }
 
 export function scheduleCalendarEveryDay(date: ConfigType, list: ScheduleCalendarDTO[]) {
@@ -104,9 +104,9 @@ export function scheduleCalendarEveryDay(date: ConfigType, list: ScheduleCalenda
     range
       .forEach((_, i) => {
         let state = 'waiting'
-        if (item.finishDates.includes(range[i]))
+        if (item.finishDates?.includes(range[i]))
           state = 'finish'
-        else if (item.cancelDates.includes(range[i]))
+        else if (item.cancelDates?.includes(range[i]))
           state = 'cancel'
 
         tempData[range[i]] && tempData[range[i]].push({

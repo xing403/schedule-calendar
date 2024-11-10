@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ElMessage } from 'element-plus'
-import { insertScheduleCalendar } from '~/api/modules/schedule-calendar'
+import scheduleCalendarApi from '~/api/modules/scheduleCalendarApi'
 
 const emit = defineEmits(['refresh'])
 const dialog = ref(false)
@@ -40,7 +40,7 @@ const scheduleModelGroup = [{
 function handleSubmit() {
   formRef.value.validate((valid: boolean) => {
     if (valid) {
-      insertScheduleCalendar(form.value).then(() => {
+      scheduleCalendarApi.insertScheduleCalendar(form.value).then(() => {
         ElMessage.success('创建成功')
         formRef.value.resetFields()
         emit('refresh')

@@ -10,7 +10,7 @@ export default defineStore('user', () => {
   const information = ref<any>(null)
   const username = computed(() => information.value?.username || '')
 
-  const userIsLogin = computed(() => !!token.value)
+  const userIsLogin = computed(() => !!information.value)
 
   const handleUserLogin = ({ username, password }: { username: string; password: string }) => {
     const form = new FormData()

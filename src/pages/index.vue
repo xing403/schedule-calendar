@@ -1,21 +1,22 @@
 <script setup lang="ts" generic="T extends any, O extends any">
-import scheduleCalendarApi from '~/api/modules/schedule-calendar'
+import scheduleCalendarApi from '~/api/modules/scheduleCalendarApi'
 import useUserStore from '~/store/modules/user'
+import useSystemStore from '~/store/modules/system'
 
 const date = ref(new Date())
 const list = ref<ScheduleCalendarDTO[]>([])
 const userStore = useUserStore()
+const systemStore = useSystemStore()
 const loading = ref(false)
 function getScheduleCalendarList() {
   if (loading.value)
     return
 
   loading.value = true
-  scheduleCalendarApi.getScheduleCalendarDTOList().then((res) => {
+  list.value = []
+  scheduleCalendarApi.getScheduleCalendarDTOList().then((res: any) => {
     list.value = res.data
-  }).catch(() => {
-    list.value = []
-  }).finally(() => {
+  }).catch(() => { }).finally(() => {
     loading.value = false
   })
 }
@@ -26,10 +27,12 @@ function handleEditScheduleCalendar(id: number) {
   editScheduleCalendarRef.value.setScheduleCalendar(schedule)
 }
 
-watch(() => userStore.userIsLogin, (val) => {
-  val ? getScheduleCalendarList() : list.value = []
+watch(() => userStore.userIsLogin || systemStore.applicationMode === 'offline', (val) => {
+  if (val)
+    getScheduleCalendarList()
 }, {
   immediate: true,
+  deep: true,
 })
 </script>
 

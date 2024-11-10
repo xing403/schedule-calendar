@@ -4,8 +4,8 @@ import isBetween from 'dayjs/plugin/isBetween'
 import { ElMessage } from 'element-plus'
 import { Check, CloseBold, Delete, Edit } from '@element-plus/icons-vue'
 import CalendarItem from './CalendarItem.vue'
-import { insertOrUpdateScheduleOperation } from '~/api/modules/schedule-operation'
-import { deleteScheduleCalendar } from '~/api/modules/schedule-calendar'
+import scheduleOperationApi from '~/api/modules/scheduleOperationApi'
+import scheduleCalendarApi from '~/api/modules/scheduleCalendarApi'
 
 const emit = defineEmits(['refresh', 'editSchedule'])
 
@@ -56,7 +56,7 @@ function handleItemStatus(status: string) {
 
   handling.value = true
   if (status === 'delete-all') {
-    deleteScheduleCalendar(current.value.id).then(() => {
+    scheduleCalendarApi.deleteScheduleCalendar(current.value.id).then(() => {
       ElMessage.success('删除成功')
       emit('refresh')
     }).finally(() => {
@@ -65,7 +65,7 @@ function handleItemStatus(status: string) {
     })
   }
   else {
-    insertOrUpdateScheduleOperation({
+    scheduleOperationApi.insertOrUpdateScheduleOperation({
       scheduleId: current.value.id,
       operationDate: current.value.day,
       operationStatus: status,

@@ -23,11 +23,11 @@ interface ScheduleOperationEntity {
   scheduleId?: number;
   operationDate?: string;
   operationStatus?: string;
-  createTime?: Date;
+  createTime?: Date | string;
   createBy?: string;
-  updateTime?: Date;
+  updateTime?: Date | string;
   updateBy?: string;
-  delFlag?: string;
+  delFlag?: string | number;
 }
 
 

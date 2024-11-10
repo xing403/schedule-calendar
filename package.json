@@ -6,7 +6,8 @@
   "scripts": {
     "build": "vite build",
     "dev": "vite --port 3333 --open",
-    "build:test": "vite build --mode test",
+    "dev:offline": "vite --mode offline --port 3333 --open",
+    "build:offline": "vite build --mode offline",
     "lint": "eslint .",
     "typecheck": "vue-tsc --noEmit",
     "preview": "vite preview",

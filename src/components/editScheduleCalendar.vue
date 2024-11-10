@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ElMessage } from 'element-plus'
-import { updateScheduleCalendar } from '~/api/modules/schedule-calendar'
+import scheduleCalendarApi from '~/api/modules/scheduleCalendarApi'
 
 const emit = defineEmits(['refresh'])
 const dialog = ref(false)
@@ -59,7 +59,7 @@ function setScheduleCalendar(item: ScheduleCalendarDTO) {
 function handleSubmit() {
   formRef.value.validate((valid: boolean) => {
     if (valid) {
-      updateScheduleCalendar(form.value).then(() => {
+      scheduleCalendarApi.updateScheduleCalendar(form.value).then(() => {
         ElMessage.success('修改成功')
         formRef.value.resetFields()
         emit('refresh')

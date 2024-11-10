@@ -1,15 +1,18 @@
 <script setup lang="ts">
 import dayjs from 'dayjs'
-import { Moon, Plus, Setting, Sunny, Warning } from '@element-plus/icons-vue'
+import { Moon, MoreFilled, Plus, Setting, Sunny, Warning } from '@element-plus/icons-vue'
 import useUserStore from '~/store/modules/user'
+import useSystemStore from '~/store/modules/system'
 
 const emit = defineEmits(['refresh'])
 const date = defineModel<Date>('date')
 const userStore = useUserStore()
+const systemStore = useSystemStore()
 const loginDialog = ref(false)
 const addScheduleCalendarRef = ref()
 const username = computed(() => userStore.username)
 const settingDialog = ref(false)
+const applicationName = computed(() => systemStore.applicationName)
 function handleCommand(command: string) {
   switch (command) {
     case 'logout':
@@ -40,8 +43,8 @@ function today() {
 
 <template>
   <div flex="~ row" h-full w-full items-center justify-between>
-    <div />
-    <div flex="~ row" h-full w-full items-center justify-end gap-10px>
+    <div>{{ applicationName }}</div>
+    <div flex="~ row" h-full items-center justify-end gap-15px>
       <el-button-group>
         <el-button size="small" @click="handleChangeMonthDate(-1)">
           上个月
@@ -54,8 +57,9 @@ function today() {
         </el-button>
       </el-button-group>
 
-      <el-dropdown v-if="userStore.userIsLogin" trigger="click" @command="handleCommand">
-        <el-avatar fit="fill">
+      <el-dropdown trigger="click" @command="handleCommand">
+        <el-button v-if="systemStore.applicationMode === 'offline'" text :icon="MoreFilled" />
+        <el-avatar v-else fit="fill">
           {{ username }}
         </el-avatar>
         <template #dropdown>
@@ -69,15 +73,21 @@ function today() {
             <el-dropdown-item command="setting" :icon="Setting">
               更多设置
             </el-dropdown-item>
-            <el-dropdown-item divided command="logout" :icon="Warning">
+            <el-dropdown-item
+              v-if="userStore.userIsLogin && systemStore.applicationMode !== 'offline'" divided
+              command="logout" :icon="Warning"
+            >
               注销登录
+            </el-dropdown-item>
+            <el-dropdown-item
+              v-else-if="systemStore.applicationMode !== 'offline'" divided command="login"
+              :icon="Warning"
+            >
+              登录
             </el-dropdown-item>
           </el-dropdown-menu>
         </template>
       </el-dropdown>
-      <el-button v-else size="small" @click="loginDialog = true">
-        登录
-      </el-button>
     </div>
     <user-login v-model="loginDialog" />
     <add-schedule-calendar ref="addScheduleCalendarRef" @refresh="() => $emit('refresh')" />
