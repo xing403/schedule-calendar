@@ -20,6 +20,7 @@ watchArray(() => [date.value, modelValue.value], () => {
   list.value = scheduleCalendarEveryDay(date.value, modelValue.value)
 })
 
+const finishAll = ref(false)
 const detailDialog = ref(false)
 const handling = ref(false)
 const current = ref<{
@@ -70,7 +71,16 @@ function handleItemStatus(status: string) {
       operationDate: current.value.day,
       operationStatus: status,
     } as ScheduleOperationEntity).then((res: any) => {
-      ElMessage.success(res.message)
+      const dayList = list.value[current.value.day] ?? []
+      const waitings = dayList.filter((item: any) => item.state === 'finish')
+      if (waitings.length === dayList.length - 1 && status === 'finish') {
+        ElMessage.success(`完成了 ${current.value.day} 全部计划`)
+        finishAll.value = true
+      }
+      else {
+        ElMessage.success(res.message)
+      }
+
       emit('refresh')
     }).finally(() => {
       handling.value = false
@@ -142,13 +152,13 @@ function handleEditSchedule(id?: number) {
             </template>
           </el-popconfirm>
           <el-button
-            :loading="handling" :disabled="handling || current.status === 'cancel'" handling type="warning"
-            :icon="CloseBold" @click="handleItemStatus('cancel')"
+            :loading="handling" :disabled="current.status === 'cancel'" handling type="warning" :icon="CloseBold"
+            @click="handleItemStatus('cancel')"
           >
             放弃
           </el-button>
           <el-button
-            :loading="handling" :disabled="handling || current.status === 'finish'" type="success" :icon="Check"
+            :loading="handling" :disabled="current.status === 'finish'" type="success" :icon="Check"
             @click="handleItemStatus('finish')"
           >
             完成
@@ -164,6 +174,8 @@ function handleEditSchedule(id?: number) {
         </template>
       </CalendarItem>
     </el-drawer>
+
+    <Confetti v-model="finishAll" />
   </div>
 </template>
 
