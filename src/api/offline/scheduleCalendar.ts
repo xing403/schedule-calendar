@@ -5,11 +5,21 @@ function insertScheduleCalendar(entity: ScheduleCalendar) {
   const db = useSystemStore().offlineDatabase
   entity.createTime = dayjs().format('YYYY-MM-DD HH:mm:ss')
   entity.createBy = 'offline'
-  return db.table('x_schedule_calendar').insert(JSON.parse(JSON.stringify(entity)))
+  return db.table('x_schedule_calendar').insert(JSON.parse(JSON.stringify(entity))).then(res => ({
+    code: 200,
+    data: res,
+    message: '操作成功',
+    error: null,
+  }))
 }
 function updateScheduleCalendar(entity: ScheduleCalendar) {
   const db = useSystemStore().offlineDatabase
-  return db.table('x_schedule_calendar').update(JSON.parse(JSON.stringify(entity)))
+  return db.table('x_schedule_calendar').update(JSON.parse(JSON.stringify(entity))).then(res => ({
+    code: 200,
+    data: res,
+    message: '操作成功',
+    error: null,
+  }))
 }
 
 function getScheduleCalendarDTOList() {
@@ -35,7 +45,12 @@ function getScheduleCalendarDTOList() {
 }
 function deleteScheduleCalendar(scheduleId: number) {
   const db = useSystemStore().offlineDatabase
-  return db.table('x_schedule_calendar').deleteById(scheduleId)
+  return db.table('x_schedule_calendar').deleteById(scheduleId).then(res => ({
+    code: 200,
+    data: res,
+    message: '操作成功',
+    error: null,
+  }))
 }
 
 export default {

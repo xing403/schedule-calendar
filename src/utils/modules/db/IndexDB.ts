@@ -121,6 +121,7 @@ class IndexedDB {
       const request = objectStore.getAll()
       request.onsuccess = () => {
         const data: any = []
+        log(`[select all] [${this.tableName}]`, request.result)
         request.result.forEach((item: any) => {
           const logicDelete = this.getLogicDelete()
           if (logicDelete && item[logicDelete.field] === logicDelete.undeleted)
@@ -136,6 +137,11 @@ class IndexedDB {
     return new Promise((resolve, reject) => {
       const transaction = this.transaction(this.tableName!, 'readwrite')
       const objectStore = transaction.objectStore(this.tableName!)
+
+      const logicDelete = this.getLogicDelete()
+      if (logicDelete)
+        entity[logicDelete.field] = logicDelete.undeleted
+
       const request = objectStore.put(entity)
       request.onsuccess = () => {
         log(`[${this.tableName}] [update] success`, request)

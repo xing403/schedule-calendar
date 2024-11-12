@@ -9,7 +9,12 @@ function insertOrUpdateScheduleOperation(entity: ScheduleOperationEntity) {
     scheduleId: entity.scheduleId,
     operationDate: entity.operationDate,
   }
-  return db.table('x_schedule_operation').insertOrUpdate(JSON.parse(JSON.stringify(entity)), wrapper)
+  return db.table('x_schedule_operation').insertOrUpdate(JSON.parse(JSON.stringify(entity)), wrapper).then(res => ({
+    code: 200,
+    data: res,
+    message: '操作成功',
+    error: null,
+  }))
 }
 export default {
   insertOrUpdateScheduleOperation,

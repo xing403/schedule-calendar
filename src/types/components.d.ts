@@ -9,6 +9,7 @@ declare module 'vue' {
   export interface GlobalComponents {
     AddScheduleCalendar: typeof import('./../components/addScheduleCalendar.vue')['default']
     CalendarItem: typeof import('./../components/CalendarItem.vue')['default']
+    Confetti: typeof import('./../components/Confetti.vue')['default']
     EditScheduleCalendar: typeof import('./../components/editScheduleCalendar.vue')['default']
     MonthCalendar: typeof import('./../components/MonthCalendar.vue')['default']
     MoreSetting: typeof import('./../components/MoreSetting.vue')['default']
