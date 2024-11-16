@@ -1,4 +1,5 @@
 import { defineStore } from 'pinia'
+import pkg from '~/../package.json'
 import IndexedDB from '~/utils/modules/db/IndexDB'
 
 export default defineStore('system', () => {
@@ -6,6 +7,8 @@ export default defineStore('system', () => {
   const applicationName = computed(() => import.meta.env.VITE_APP_APPLICATION_NAME || '')
   const offlineDatabase = ref(new IndexedDB())
   const isDeveloperMode = ref(useLocalStorage('is-developer-mode', false).value)
+  const version = computed(() => pkg.version)
+  const author = computed(() => pkg.author)
 
   const init = async () => {
     if (applicationMode.value === 'offline')
@@ -13,6 +16,11 @@ export default defineStore('system', () => {
   }
 
   return {
+    applicationInfo: {
+      version,
+      author,
+      applicationName,
+    },
     isDeveloperMode,
     applicationMode,
     applicationName,

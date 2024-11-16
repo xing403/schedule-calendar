@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import dayjs from 'dayjs'
-import { Moon, MoreFilled, Plus, Setting, Sunny, Warning } from '@element-plus/icons-vue'
+import { ChatLineRound, Moon, MoreFilled, Plus, Setting, Sunny, Warning } from '@element-plus/icons-vue'
 import { ElMessage } from 'element-plus'
 import useUserStore from '~/store/modules/user'
 import useSystemStore from '~/store/modules/system'
@@ -13,6 +13,7 @@ const loginDialog = ref(false)
 const addScheduleCalendarRef = ref()
 const username = computed(() => userStore.username)
 const settingDialog = ref(false)
+const aboutMeDrawer = ref(false)
 const applicationName = computed(() => systemStore.applicationName)
 function handleCommand(command: string) {
   switch (command) {
@@ -27,6 +28,9 @@ function handleCommand(command: string) {
       break
     case 'setting':
       settingDialog.value = true
+      break
+    case 'about-me':
+      aboutMeDrawer.value = true
       break
   }
 }
@@ -97,6 +101,9 @@ function enableDeveloperMode() {
             <el-dropdown-item command="setting" :icon="Setting">
               更多设置
             </el-dropdown-item>
+            <el-dropdown-item command="about-me" :icon="ChatLineRound">
+              关于我们
+            </el-dropdown-item>
             <el-dropdown-item
               v-if="userStore.userIsLogin && systemStore.applicationMode !== 'offline'" divided
               command="logout" :icon="Warning"
@@ -116,5 +123,6 @@ function enableDeveloperMode() {
     <user-login v-model="loginDialog" />
     <add-schedule-calendar ref="addScheduleCalendarRef" @refresh="() => $emit('refresh')" />
     <more-setting v-model="settingDialog" />
+    <about-me v-model="aboutMeDrawer" />
   </div>
 </template>

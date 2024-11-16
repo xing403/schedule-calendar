@@ -7,6 +7,7 @@ export {}
 
 declare module 'vue' {
   export interface GlobalComponents {
+    AboutMe: typeof import('./../components/AboutMe.vue')['default']
     AddScheduleCalendar: typeof import('./../components/addScheduleCalendar.vue')['default']
     CalendarItem: typeof import('./../components/CalendarItem.vue')['default']
     Confetti: typeof import('./../components/Confetti.vue')['default']

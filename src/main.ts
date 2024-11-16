@@ -10,7 +10,8 @@ import 'element-plus/theme-chalk/display.css'
 
 import 'uno.css'
 import store from './store'
-import './assets/styles/main.css'
+import '~/assets/styles/reset-element-theme.css'
+import '~/assets/styles/main.css'
 
 const app = createApp(App)
 
