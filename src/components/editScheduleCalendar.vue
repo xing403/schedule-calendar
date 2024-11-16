@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ElMessage } from 'element-plus'
+import { ElMessage, dayjs } from 'element-plus'
 import scheduleCalendarApi from '~/api/modules/scheduleCalendarApi'
 
 const emit = defineEmits(['refresh'])
@@ -21,6 +21,7 @@ const rules = {
   scheduleTitle: [{ required: true, message: '请输入日程标题', trigger: 'blur' }],
   scheduleModel: [{ required: true, message: '请选择日程类型', trigger: 'blur' }],
   scheduleRangeStart: [{ required: true, message: '请选择日程起止日期', trigger: 'blur' }],
+  scheduleRangeEnd: [{ required: true, message: '请选择日程起止日期', trigger: 'blur' }],
   scheduleDate: [{ required: true, message: '请选择日程日期', trigger: 'blur' }],
   scheduleCron: [
     { required: true, message: '请输入 cron 表达式', trigger: 'blur' },
@@ -40,20 +41,11 @@ const scheduleModelGroup = [{
 }]
 
 function setScheduleCalendar(item: ScheduleCalendarDTO) {
-  form.value.scheduleId = item.scheduleId
-  form.value.scheduleTitle = item.scheduleTitle
-  form.value.scheduleModel = item.scheduleModel
-  if (item.scheduleModel === '0') {
-    form.value.scheduleRangeStart = item.scheduleRangeStart
-    form.value.scheduleRangeEnd = item.scheduleRangeEnd
-    scheduleRange.value = [item.scheduleRangeStart, item.scheduleRangeEnd]
-  }
-  else if (item.scheduleModel === '1') {
-    form.value.scheduleDate = item.scheduleDate
-  }
-  else if (item.scheduleModel === '2') {
-    form.value.scheduleCron = item.scheduleCron
-  }
+  Object.keys(item).forEach((key) => {
+    if (!['cancelDates', 'finishDates', 'deleteDates'].includes(key))
+      form.value[key] = item[key]
+  })
+  scheduleRange.value = [dayjs(form.value.scheduleRangeStart).toDate(), dayjs(form.value.scheduleRangeEnd).toDate()]
   open()
 }
 function handleSubmit() {
@@ -76,6 +68,10 @@ watch(scheduleRange, (val) => {
 function open() {
   dialog.value = true
 }
+function changeScheduleModel() {
+  scheduleRange.value = []
+  formRef.value?.resetFields(['scheduleRangeStart', 'scheduleRangeEnd', 'scheduleDate', 'scheduleCron'])
+}
 
 defineExpose({
   open,
@@ -90,7 +86,7 @@ defineExpose({
         <el-input v-model="form.scheduleTitle" placeholder="请输入日程标题" />
       </el-form-item>
       <el-form-item label="日程类型" prop="scheduleModel">
-        <el-radio-group v-model="form.scheduleModel">
+        <el-radio-group v-model="form.scheduleModel" @change="changeScheduleModel">
           <el-radio v-for="item in scheduleModelGroup" :key="item.key" :value="item.key" :label="item.label" />
         </el-radio-group>
       </el-form-item>
@@ -104,6 +100,12 @@ defineExpose({
         <el-date-picker
           v-model="form.scheduleDate" :editable="false" type="date" placeholder="选择日期时间" format="YYYY-MM-DD"
           value-format="YYYY-MM-DD"
+        />
+      </el-form-item>
+      <el-form-item v-if="form.scheduleModel === '2'" label="日期范围">
+        <el-date-picker
+          v-model="scheduleRange" :editable="false" type="daterange" start-placeholder="开始日期"
+          end-placeholder="结束日期" format="YYYY-MM-DD" value-format="YYYY-MM-DD"
         />
       </el-form-item>
       <el-form-item v-if="form.scheduleModel === '2'" label="表达式" prop="scheduleCron">

@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import confetti from 'canvas-confetti'
-import { defineModel } from 'vue'
 
 const isPassed = defineModel<boolean>()
 

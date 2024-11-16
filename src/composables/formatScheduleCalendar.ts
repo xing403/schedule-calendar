@@ -83,7 +83,12 @@ export function getScheduleCalendarRangeDateByScheduleModel(item: ScheduleCalend
     range = [dayjs(item.scheduleDate).format('YYYY-MM-DD')]
   }
   else if (item.scheduleModel === '2') {
-    const [start, end] = getMonthStartAndEnd(date)
+    let [start, end] = getMonthStartAndEnd(date)
+    if (item.scheduleRangeStart)
+      start = start.isBefore(item.scheduleRangeStart, 'date') ? dayjs(item.scheduleRangeStart) : start
+
+    if (item.scheduleRangeEnd)
+      end = end.isAfter(item.scheduleRangeEnd, 'date') ? dayjs(item.scheduleRangeEnd) : end
     range = getCronDate(`0 0 0 ${item.scheduleCron}`, start, end)
   }
   return range.filter(r => !item.deleteDates?.includes(r))

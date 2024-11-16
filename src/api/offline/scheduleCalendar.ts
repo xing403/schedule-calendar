@@ -14,6 +14,8 @@ function insertScheduleCalendar(entity: ScheduleCalendar) {
 }
 function updateScheduleCalendar(entity: ScheduleCalendar) {
   const db = useSystemStore().offlineDatabase
+  entity.updateTime = dayjs().format('YYYY-MM-DD HH:mm:ss')
+  entity.createBy = 'offline'
   return db.table('x_schedule_calendar').update(JSON.parse(JSON.stringify(entity))).then(res => ({
     code: 200,
     data: res,
@@ -30,9 +32,19 @@ function getScheduleCalendarDTOList() {
       for (let i = 0; i < res.length; i++) {
         const item = res[i]
         const operations = await db.table('x_schedule_operation').select({ scheduleId: item.scheduleId })
-        item.finishDates = operations.filter((operation: any) => operation.operationStatus === 'finish').map(item => item.operationDate)
-        item.cancelDates = operations.filter((operation: any) => operation.operationStatus === 'cancel').map(item => item.operationDate)
-        item.deleteDates = operations.filter((operation: any) => operation.operationStatus === 'delete').map(item => item.operationDate)
+        operations.forEach((operation) => {
+          switch (operation.operationStatus) {
+            case 'finish':
+              item.finishDates ? item.finishDates.push(operation.operationDate) : item.finishDates = [operation.operationDate]
+              break
+            case 'cancel':
+              item.cancelDates ? item.cancelDates.push(operation.operationDate) : item.cancelDates = [operation.operationDate]
+              break
+            case 'delete':
+              item.deleteDates ? item.deleteDates.push(operation.operationDate) : item.deleteDates = [operation.operationDate]
+              break
+          }
+        })
       }
       resolve({
         code: 200,

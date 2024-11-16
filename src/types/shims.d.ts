@@ -16,6 +16,7 @@ interface ScheduleCalendar {
   updateTime?: Date | string;
   updateBy?: string;
   delFlag?: string | number;
+  [key: string]: any
 }
 
 interface ScheduleOperationEntity {
