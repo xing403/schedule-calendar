@@ -101,8 +101,8 @@ export function scheduleCalendarEveryDay(date: ConfigType, list: ScheduleCalenda
     const range = getScheduleCalendarRangeDateByScheduleModel(item, date)
     let { darkColor, lightColor } = scheduleConfigStore.colorsCache.find((clr: any) => clr.id === item.scheduleId) || {}
     if (!(darkColor && lightColor)) {
-      darkColor = randomColor({ luminosity: 'dark', hue: 'blue' }).toHexString()
-      lightColor = randomColor({ luminosity: 'light', hue: 'blue' }).toHexString()
+      darkColor = randomColor({ luminosity: 'dark', hue: scheduleConfigStore.getRandomColorTheme() }).toHexString()
+      lightColor = randomColor({ luminosity: 'light', hue: scheduleConfigStore.getRandomColorTheme() }).toHexString()
       scheduleConfigStore.colors.push({ id: item.scheduleId, darkColor, lightColor })
       scheduleConfigStore.colorsCache.push({ id: item.scheduleId, darkColor, lightColor })
     }
