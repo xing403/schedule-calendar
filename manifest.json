@@ -1,9 +1,9 @@
 {
     "@platforms" : [ "android", "iPhone", "iPad" ],
     "id" : "H5BD71C47", /*应用的标识*/
-    "name" : "schedule", /*应用名称，程序桌面图标名称*/
+    "name" : "intend", /*应用名称，程序桌面图标名称*/
     "version" : {
-        "name" : "0.1.6", /*应用版本名称*/
+        "name" : "0.1.7", /*应用版本名称*/
         "code" : 1
     },
     "description" : "记录日程相关应用", /*应用描述信息*/
@@ -82,10 +82,10 @@
         },
         "iBeacon" : {},
         "LivePusher" : {},
-        "Fingerprint" : {},
         "Maps" : {},
         "Push" : {},
-        "Barcode" : {}
+        "Barcode" : {},
+        "Fingerprint" : {}
     },
     "plus" : {
         "splashscreen" : {
