@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ElMessage } from 'element-plus'
+import { ElMessage, dayjs } from 'element-plus'
 import scheduleCalendarApi from '~/api/modules/scheduleCalendarApi'
 
 const emit = defineEmits(['refresh'])
@@ -55,7 +55,7 @@ watch(scheduleRange, (val) => {
 })
 
 function changeScheduleModel() {
-  scheduleRange.value = []
+  scheduleRange.value = [dayjs().toDate(), dayjs().toDate()]
   formRef.value?.resetFields(['scheduleRangeStart', 'scheduleRangeEnd', 'scheduleDate', 'scheduleCron'])
 }
 
@@ -69,7 +69,7 @@ defineExpose({
 </script>
 
 <template>
-  <el-dialog v-model="dialog" title="新增日程" width="400">
+  <el-dialog v-model="dialog" title="新增日程" width="400" destroy-on-close>
     <el-form ref="formRef" :model="form" :rules="rules" label-position="top">
       <el-form-item label="日程标题" prop="scheduleTitle">
         <el-input v-model="form.scheduleTitle" placeholder="请输入日程标题" />
@@ -87,8 +87,8 @@ defineExpose({
       </el-form-item>
       <el-form-item v-if="form.scheduleModel === '1'" label="日期" prop="scheduleDate">
         <el-date-picker
-          v-model="form.scheduleDate" :editable="false" type="date" placeholder="选择日期时间" format="YYYY-MM-DD"
-          value-format="YYYY-MM-DD"
+          v-model="form.scheduleDate" :editable="false" type="date" placeholder="选择日期时间"
+          format="YYYY-MM-DD" value-format="YYYY-MM-DD"
         />
       </el-form-item>
       <el-form-item v-if="form.scheduleModel === '2'" label="日期范围">
