@@ -3,7 +3,6 @@ import scheduleCalendarApi from '~/api/modules/scheduleCalendarApi'
 import useUserStore from '~/store/modules/user'
 import useSystemStore from '~/store/modules/system'
 
-const date = ref(new Date())
 const list = ref<ScheduleCalendarDTO[]>([])
 const userStore = useUserStore()
 const systemStore = useSystemStore()
@@ -37,14 +36,27 @@ watch(() => userStore.userIsLogin || systemStore.applicationMode === 'offline', 
 </script>
 
 <template>
+  <el-affix>
+    <el-header class="header">
+      <schedule-calendar-header @refresh="getScheduleCalendarList()" />
+    </el-header>
+  </el-affix>
   <month-calendar
-    v-model:date="date" v-model="list" v-loading="loading" @refresh="getScheduleCalendarList()"
+    v-model="list" v-loading="loading" @refresh="getScheduleCalendarList()"
     @edit-schedule="handleEditScheduleCalendar"
-  >
-    <template #header>
-      <schedule-calendar-header v-model:date="date" @refresh="getScheduleCalendarList()" />
-    </template>
-  </month-calendar>
+  />
 
   <edit-schedule-calendar ref="editScheduleCalendarRef" @refresh="getScheduleCalendarList()" />
 </template>
+
+<style scoped>
+@unocss;
+
+.header {
+  --un-gradient: #fdfcfb;
+  --un-gradient-stops: 4px;
+  background-size: 4px 4px;
+  @apply bg-gradient-radial;
+  backdrop-filter: saturate(70%) blur(4px);
+}
+</style>

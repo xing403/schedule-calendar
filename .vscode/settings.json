@@ -1,5 +1,6 @@
 {
   "cSpell.words": [
     "vconsole"
-  ]
+  ],
+  "css.lint.unknownAtRules": "ignore"
 }

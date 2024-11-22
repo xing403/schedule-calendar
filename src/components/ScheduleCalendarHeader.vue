@@ -1,12 +1,10 @@
 <script setup lang="ts">
-import dayjs from 'dayjs'
 import { ChatLineRound, Moon, MoreFilled, Plus, Setting, Sunny, Warning } from '@element-plus/icons-vue'
 import { ElMessage } from 'element-plus'
 import useUserStore from '~/store/modules/user'
 import useSystemStore from '~/store/modules/system'
 
 const emit = defineEmits(['refresh'])
-const date = defineModel<Date>('date')
 const userStore = useUserStore()
 const systemStore = useSystemStore()
 const loginDialog = ref(false)
@@ -33,16 +31,6 @@ function handleCommand(command: string) {
       aboutMeDrawer.value = true
       break
   }
-}
-/**
- * 改变日期
- * @param diff
- */
-function handleChangeMonthDate(diff?: number) {
-  date.value = dayjs(date.value).add(diff || 0, 'month').toDate()
-}
-function today() {
-  date.value = dayjs().toDate()
 }
 let count = 0
 let timer: any
@@ -73,18 +61,6 @@ function enableDeveloperMode() {
       {{ applicationName }}
     </div>
     <div flex="~ row" h-full items-center justify-end gap-15px>
-      <el-button-group>
-        <el-button size="small" @click="handleChangeMonthDate(-1)">
-          上个月
-        </el-button>
-        <el-button size="small" @click="today()">
-          今天
-        </el-button>
-        <el-button size="small" @click="handleChangeMonthDate(1)">
-          下个月
-        </el-button>
-      </el-button-group>
-
       <el-dropdown trigger="click" @command="handleCommand">
         <el-button v-if="systemStore.applicationMode === 'offline'" text :icon="MoreFilled" />
         <el-avatar v-else fit="fill">

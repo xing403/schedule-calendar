@@ -69,7 +69,10 @@ watch(() => systemStore.isDeveloperMode, (val) => {
               v-model="scheduleConfigStore.colorTheme" placeholder="请选择颜色" multiple allow-create
               default-first-option w-240px
             >
-              <el-option v-for="color in defaultColorTheme" :key="color.value" :label="color.label" :value="color.value">
+              <el-option
+                v-for="color in defaultColorTheme" :key="color.value" :label="color.label"
+                :value="color.value"
+              >
                 <div class="flex items-center">
                   <el-tag :color="color.value" style="margin-right: 8px" size="small" />
                   <span :style="{ color: color.value }">{{ color.label }}</span>
@@ -94,7 +97,7 @@ watch(() => systemStore.isDeveloperMode, (val) => {
   </el-drawer>
 </template>
 
-<style lang="postcss" scoped>
+<style scoped>
 .list-group-item {
   @apply items-center justify-between px-1 py-2 flex;
 }

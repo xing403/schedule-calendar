@@ -12,7 +12,7 @@ const emit = defineEmits(['refresh', 'editSchedule'])
 const modelValue = defineModel<ScheduleCalendarDTO[]>({
   default: () => [],
 })
-const date = defineModel<Date>('date')
+const date = ref(dayjs())
 dayjs.extend(isBetween)
 
 const list = ref<any>({})
@@ -44,13 +44,14 @@ function onClickScheduleItem(data: any) {
   detailDialog.value = true
 }
 
-const detailDrawer = ref(false)
-const drawerDay = ref('')
+const drawerDay = ref(date.value.format('YYYY-MM-DD'))
 const drawerData = computed(() => list.value?.[drawerDay.value])
 function onClickItem({ day }: { day: string }) {
   drawerDay.value = day
-  detailDrawer.value = true
 }
+watchEffect(() => {
+  drawerDay.value = dayjs(date.value).format('YYYY-MM-DD')
+})
 function handleItemStatus(status: string) {
   if (handling.value)
     return
@@ -91,24 +92,24 @@ function handleItemStatus(status: string) {
 
 function handleEditSchedule(id?: number) {
   detailDialog.value = false
-  detailDrawer.value = false
   emit('editSchedule', id)
 }
 </script>
 
 <template>
-  <div class="calendar">
-    <el-calendar v-model="date">
-      <template #header>
-        <slot name="header" />
-      </template>
-      <template #date-cell="{ data }">
-        <CalendarItem
-          :day="data.day" :list="list?.[data.day] || []" @item-click="onClickScheduleItem"
-          @click="onClickItem"
-        />
-      </template>
-    </el-calendar>
+  <div>
+    <el-row>
+      <el-col :lg="12" :xl="12">
+        <el-calendar v-model="date">
+          <template #date-cell="{ data: { day } }">
+            <CalendarItem :day="day" :list="list?.[day] || []" @click="onClickItem" />
+          </template>
+        </el-calendar>
+      </el-col>
+      <el-col :lg="12" :xl="12">
+        <CalendarItem :day="drawerDay" :list="drawerData" scene="sidebar" @item-click="onClickScheduleItem" />
+      </el-col>
+    </el-row>
 
     <el-dialog v-model="detailDialog" width="450px" destroy-on-close>
       <template #header>
@@ -152,8 +153,8 @@ function handleEditSchedule(id?: number) {
             </template>
           </el-popconfirm>
           <el-button
-            :loading="handling" :disabled="current.status === 'cancel'" handling type="warning" :icon="CloseBold"
-            @click="handleItemStatus('cancel')"
+            :loading="handling" :disabled="current.status === 'cancel'" handling type="warning"
+            :icon="CloseBold" @click="handleItemStatus('cancel')"
           >
             放弃
           </el-button>
@@ -166,39 +167,6 @@ function handleEditSchedule(id?: number) {
         </el-button-group>
       </template>
     </el-dialog>
-
-    <el-drawer v-model="detailDrawer" :title="drawerDay" :destroy-on-close="true">
-      <CalendarItem :day="drawerDay" :list="drawerData" scene="drawer" @item-click="onClickScheduleItem">
-        <template #header>
-          <div />
-        </template>
-      </CalendarItem>
-    </el-drawer>
-
     <Confetti v-model="finishAll" />
   </div>
 </template>
-
-<style lang="postcss" scoped>
-.calendar {
-  width: 100%;
-  height: 100%;
-
-  .el-calendar {
-    --el-calendar-cell-width: auto;
-
-    .is-selected {
-      background: transparent;
-    }
-  }
-
-  .el-button-group:after,
-  .el-button-group:before {
-    content: none;
-  }
-}
-
-.el-button+.el-button {
-  margin-left: 0;
-}
-</style>
