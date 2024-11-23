@@ -38,7 +38,7 @@ function getStateColor(state: string) {
         <TransitionGroup name="fade">
           <el-button
             v-for="item, index in list" :key="props.day + index"
-            :color="isDark ? item.darkColor : item.lightColor" :disabled="false" w-full
+            :color="isDark ? item.darkColor : item.lightColor" :disabled="false" w-full justify-start
             @click.stop="handleClickScheduleItem(item)"
           >
             <template #icon>

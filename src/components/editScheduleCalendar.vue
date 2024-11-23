@@ -80,7 +80,7 @@ defineExpose({
 </script>
 
 <template>
-  <el-dialog v-model="dialog" title="编辑日程" width="400" destroy-on-close>
+  <el-dialog v-model="dialog" title="编辑日程" width="400" destroy-on-close append-to-body>
     <el-form ref="formRef" :model="form" :rules="rules" label-position="top">
       <el-form-item label="日程标题" prop="scheduleTitle">
         <el-input v-model="form.scheduleTitle" placeholder="请输入日程标题" />

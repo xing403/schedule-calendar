@@ -34,9 +34,12 @@ function handleLoginUser() {
 </script>
 
 <template>
-  <el-dialog v-model="loginDialog" title="登录" width="300px">
+  <el-dialog v-model="loginDialog" title="登录" width="300px" destroy-on-close append-to-body>
     <div class="login-content" flex="~ col" items-center justify-center>
-      <el-form ref="loginFormRef" :model="loginForm" :rules="loginFormRules" label-position="top" w-full :inline="false">
+      <el-form
+        ref="loginFormRef" :model="loginForm" :rules="loginFormRules" label-position="top" w-full
+        :inline="false"
+      >
         <el-form-item prop="username">
           <el-input v-model="loginForm.username" placeholder="请输入用户名" />
         </el-form-item>

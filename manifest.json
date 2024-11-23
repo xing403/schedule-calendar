@@ -237,6 +237,11 @@
             }
         }
     },
-    "screenOrientation" : [ "landscape-primary", "landscape-secondary" ],
+    "screenOrientation" : [
+        "portrait-primary",
+        "portrait-secondary",
+        "landscape-primary",
+        "landscape-secondary"
+    ],
     "fullscreen" : true
 }

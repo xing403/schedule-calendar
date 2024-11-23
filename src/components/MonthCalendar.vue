@@ -99,19 +99,19 @@ function handleEditSchedule(id?: number) {
 <template>
   <div>
     <el-row>
-      <el-col :lg="12" :xl="12">
+      <el-col :md="16" :lg="12" :xl="12">
         <el-calendar v-model="date">
           <template #date-cell="{ data: { day } }">
             <CalendarItem :day="day" :list="list?.[day] || []" @click="onClickItem" />
           </template>
         </el-calendar>
       </el-col>
-      <el-col :lg="12" :xl="12">
+      <el-col :md="8" :lg="12" :xl="12">
         <CalendarItem :day="drawerDay" :list="drawerData" scene="sidebar" @item-click="onClickScheduleItem" />
       </el-col>
     </el-row>
 
-    <el-dialog v-model="detailDialog" width="450px" destroy-on-close>
+    <el-dialog v-model="detailDialog" width="450px" destroy-on-close append-to-body>
       <template #header>
         <div flex="~ row" items-center gap-2>
           <span class="text-lg">日程详情</span>

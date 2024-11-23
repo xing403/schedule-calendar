@@ -6,7 +6,10 @@ const drawer = defineModel<boolean>()
 </script>
 
 <template>
-  <el-drawer v-model="drawer" title="关于我" direction="btt" size="80%" destory-on-close style="width: 80%;" m-a>
+  <el-drawer
+    v-model="drawer" title="关于我" direction="btt" size="80%" style="width: 80%;" destory-on-close append-to-body
+    m-a
+  >
     <el-descriptions :column="1" border>
       <el-descriptions-item label="应用">
         <div text-right>
