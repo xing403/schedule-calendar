@@ -16,7 +16,7 @@ const drawer = defineModel<boolean>()
           {{ applicationInfo.applicationName }}
         </div>
       </el-descriptions-item>
-      <el-descriptions-item label="version">
+      <el-descriptions-item label="版本">
         <div text-right>
           {{ applicationInfo.version }}
         </div>

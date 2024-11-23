@@ -12,7 +12,7 @@ const emit = defineEmits(['refresh', 'editSchedule'])
 const modelValue = defineModel<ScheduleCalendarDTO[]>({
   default: () => [],
 })
-const date = ref(dayjs())
+const date = ref(dayjs().toDate())
 dayjs.extend(isBetween)
 
 const list = ref<any>({})
@@ -44,8 +44,8 @@ function onClickScheduleItem(data: any) {
   detailDialog.value = true
 }
 
-const drawerDay = ref(date.value.format('YYYY-MM-DD'))
-const drawerData = computed(() => list.value?.[drawerDay.value])
+const drawerDay = ref(dayjs(date.value).format('YYYY-MM-DD'))
+const drawerData = computed(() => list.value?.[drawerDay.value] || [])
 function onClickItem({ day }: { day: string }) {
   drawerDay.value = day
 }
@@ -113,7 +113,7 @@ function handleEditSchedule(id?: number) {
 
     <el-dialog v-model="detailDialog" width="450px" destroy-on-close append-to-body>
       <template #header>
-        <div flex="~ row" items-center gap-2>
+        <div flex="~ row" items-center>
           <span class="text-lg">日程详情</span>
           <el-button :loading="handling" link :icon="Edit" @click="handleEditSchedule(current.instance?.scheduleId)" />
           <el-popconfirm
@@ -141,7 +141,7 @@ function handleEditSchedule(id?: number) {
         </el-descriptions-item>
       </el-descriptions>
       <template #footer>
-        <el-button-group grid w-full style="grid-template-columns:repeat(auto-fit, minmax(25%, 1fr))">
+        <el-button-group grid w-full style="grid-template-columns:repeat(3,minmax(1fr,1fr))">
           <el-popconfirm
             width="220" title="确定删除这个日程? 这是不可逆的，请谨慎操作, 完成或被取消任务项不可再被修改"
             @confirm="handleItemStatus('delete')"

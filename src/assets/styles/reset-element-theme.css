@@ -1,3 +1,10 @@
+.el-drawer .el-drawer__header{
+  @apply mb-0;
+}
 .el-calendar-table .el-calendar-day{
   @apply p-0;
+}
+.el-button-group::before,
+.el-button-group::after{
+  @apply content-none;
 }

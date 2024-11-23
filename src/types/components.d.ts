@@ -17,6 +17,7 @@ declare module 'vue' {
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
     ScheduleCalendarHeader: typeof import('./../components/ScheduleCalendarHeader.vue')['default']
+    StatusIcon: typeof import('./../components/StatusIcon.vue')['default']
     UserLogin: typeof import('./../components/UserLogin.vue')['default']
   }
 }

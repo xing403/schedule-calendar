@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ArrowRight } from '@element-plus/icons-vue'
+import { ArrowRight, InfoFilled } from '@element-plus/icons-vue'
 import useScheduleConfigStore from '~/store/modules/schedule-config'
 import useSystemStore from '~/store/modules/system'
 
@@ -53,17 +53,16 @@ watch(() => systemStore.isDeveloperMode, (val) => {
         </div>
         <div class="list-group-item" b-b="1px light:#F2F4F7 dark:#2A2A2A">
           <div class="list-item-title" p-l-1>
+            <span>随机任务项颜色</span>
             <el-popover placement="right-start" :width="200" trigger="click">
               <ul>
                 <li>颜色更新后将会再下次打开应用时生效</li>
                 <li>默认仅对之后创建的日程生效，若需对之前的日程生效请执行清除颜色缓存并重启应用</li>
               </ul>
               <template #reference>
-                <el-badge type="info">
-                  <el-button text>
-                    随机任务项颜色
-                  </el-button>
-                </el-badge>
+                <el-icon>
+                  <InfoFilled />
+                </el-icon>
               </template>
             </el-popover>
           </div>

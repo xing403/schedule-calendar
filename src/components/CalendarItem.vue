@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import { CircleCloseFilled, Loading, SuccessFilled } from '@element-plus/icons-vue'
 import dayjs from 'dayjs'
 import type { CalendarItemProps, ScheduleItem } from './ScheduleItem'
 
@@ -42,22 +41,23 @@ function getStateColor(state: string) {
             @click.stop="handleClickScheduleItem(item)"
           >
             <template #icon>
-              <el-icon :class="{ 'is-loading': item.state === 'waiting' }" :color="getStateColor(item.state)">
-                <SuccessFilled v-if="item.state === 'finish'" />
-                <CircleCloseFilled v-if="item.state === 'cancel'" />
-                <Loading v-if="item.state === 'waiting'" />
-              </el-icon>
+              <status-icon :state="item.state" :color="getStateColor(item.state)" />
             </template>
             <span>{{ item.title }}</span>
           </el-button>
         </TransitionGroup>
       </template>
     </el-scrollbar>
-    <div v-else grid style="grid-template-columns: repeat(auto-fill, 1em);">
+    <div v-else grid style="grid-template-columns: repeat(auto-fill, 1.5em);">
       <div
-        v-for="item, index in list" :key="props.day + index" h-3 w-3 b-rd-3 px-1
+        v-for="item, index in list" :key="props.day + index" flex="~ row" h-5 w-5 items-center justify-center b-rd-3
         :style="{ background: isDark ? item.darkColor : item.lightColor }"
-      />
+      >
+        <status-icon
+          :state="item.state"
+          :color="getStateColor(item.state)"
+        />
+      </div>
     </div>
   </div>
 </template>
