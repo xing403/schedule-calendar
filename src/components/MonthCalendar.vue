@@ -141,7 +141,7 @@ function handleEditSchedule(id?: number) {
         </el-descriptions-item>
       </el-descriptions>
       <template #footer>
-        <el-button-group grid w-full style="grid-template-columns:repeat(3,minmax(1fr,1fr))">
+        <el-button-group grid w-full style="grid-template-columns:repeat(3,1fr)">
           <el-popconfirm
             width="220" title="确定删除这个日程? 这是不可逆的，请谨慎操作, 完成或被取消任务项不可再被修改"
             @confirm="handleItemStatus('delete')"

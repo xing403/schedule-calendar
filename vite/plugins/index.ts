@@ -5,6 +5,7 @@ import createComponents from './components'
 import createAutoImport from './auto-import'
 import createPages from './pages'
 import createUnocss from './unocss'
+import createVueDevTools from './dev-tools'
 
 export default function useVitePlugins() {
   const plugins: (PluginOption | PluginOption[])[] = [Vue()]
@@ -12,6 +13,7 @@ export default function useVitePlugins() {
   plugins.push(createPages())
   plugins.push(createAutoImport())
   plugins.push(createUnocss())
+  plugins.push(createVueDevTools())
 
   return plugins
 }
