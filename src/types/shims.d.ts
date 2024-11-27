@@ -3,7 +3,7 @@ declare module '*.vue' {
   const component: DefineComponent<{}, {}, any>
   export default component
 }
-interface ScheduleCalendar {
+interface ScheduleCalendar extends Record<string, any> {
   scheduleId?: number;
   scheduleTitle: string;
   scheduleModel: string;
@@ -16,7 +16,6 @@ interface ScheduleCalendar {
   updateTime?: Date | string;
   updateBy?: string;
   delFlag?: string | number;
-  [key: string]: any
 }
 
 interface ScheduleOperationEntity {
